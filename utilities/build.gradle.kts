@@ -15,6 +15,5 @@ tasks.named<BootJar>("bootJar") {
 }
 
 dependencies {
-    implementation(project(":list"))
     implementation(project(":api"))
 }
