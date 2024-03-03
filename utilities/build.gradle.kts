@@ -7,9 +7,14 @@ import org.springframework.boot.gradle.tasks.bundling.BootJar
  */
 
 plugins {
-    id("se.magnus.microservices.kotlin-library-conventions")
+    id("se.magnus.microservices.kotlin-application-conventions")
+}
+
+tasks.named<BootJar>("bootJar") {
+    enabled = false
 }
 
 dependencies {
-    api(project(":list"))
+    implementation(project(":list"))
+    implementation(project(":api"))
 }
