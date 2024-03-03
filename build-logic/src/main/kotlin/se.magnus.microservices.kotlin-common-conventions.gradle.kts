@@ -7,6 +7,7 @@
 plugins {
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
     id("org.jetbrains.kotlin.jvm")
+    id("org.jetbrains.kotlin.plugin.spring")
 }
 
 repositories {
@@ -19,6 +20,8 @@ dependencies {
         // Define dependency versions as constraints
         implementation("org.apache.commons:commons-text:1.10.0")
     }
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    //implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 }
 
 testing {
