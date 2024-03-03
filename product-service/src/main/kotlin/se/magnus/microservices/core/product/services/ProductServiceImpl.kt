@@ -17,7 +17,7 @@ class ProductServiceImpl @Autowired constructor(private val serviceUtil: Service
 
     override fun getProduct(productId: Int): Product {
 
-        LOG.debug("/product return the found product for productId={}", productId)
+        LOG.debug("/product return the found product for productId=$productId")
 
         if (productId < 1) {
             throw InvalidInputException("Invalid productId: $productId")

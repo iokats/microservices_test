@@ -20,3 +20,4 @@ rootProject.name = "microservices"
 include("app", "list", "utilities")
 include("api")
 include("product-service")
+include("recommendation-service")
