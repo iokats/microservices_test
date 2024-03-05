@@ -17,6 +17,3 @@ class ProductCompositeServiceApplication {
 fun main(args: Array<String>) {
 	SpringApplication.run(ProductCompositeServiceApplication::class.java, *args)
 }
-
-
-
