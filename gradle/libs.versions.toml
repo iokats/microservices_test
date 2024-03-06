@@ -6,9 +6,13 @@ kotlin-gradle-plugin = "1.9.22"
 kotlin-spring-plugin = "1.9.22"
 spring-boot-plugin = "3.2.3"
 dependency-management-plugin = "1.1.4"
+springdoc-openapi = "1.7.0"
+springdoc-openapi-webflux = "1.7.0"
 
 [libraries]
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin-gradle-plugin" }
 kotlin-spring-plugin = { module = "org.jetbrains.kotlin:kotlin-allopen", version.ref = "kotlin-spring-plugin" }
 spring-boot-plugin = { module = "org.springframework.boot:spring-boot-gradle-plugin", version.ref = "spring-boot-plugin" }
-dependency-management-plugin= { module = "io.spring.gradle:dependency-management-plugin", version.ref = "dependency-management-plugin" }
+dependency-management-plugin = { module = "io.spring.gradle:dependency-management-plugin", version.ref = "dependency-management-plugin" }
+springdoc-openapi = { module = "org.springdoc:springdoc-openapi-common", version.ref = "springdoc-openapi" }
+springdoc-openapi-webflux = { module = "org.springdoc:springdoc-openapi-webflux-ui", version.ref = "springdoc-openapi-webflux" }

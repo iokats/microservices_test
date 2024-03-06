@@ -8,6 +8,7 @@ dependencies {
 
 	implementation(project(":api"))
 	implementation(project(":utilities"))
+	implementation(libs.springdoc.openapi.webflux)
 }
 
 tasks.named<BootJar>("bootJar") {
