@@ -8,9 +8,14 @@ dependencies {
 
     implementation(project(":api"))
     implementation(project(":utilities"))
+    implementation(libs.spring.data.mongodb)
     implementation(libs.mapstruct)
     implementation(libs.mapstruct.spring.extension)
     kapt(libs.mapstruct.processor)
+    implementation(libs.testcontainers.bom)
+    testImplementation(libs.testcontainers)
+    testImplementation(libs.testcontainers.junit.jupiter)
+    testImplementation(libs.testcontainers.mongodb)
 }
 
 tasks.named<BootJar>("bootJar") {
