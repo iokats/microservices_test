@@ -20,4 +20,8 @@ dependencies {
     implementation(libs.kotlin.spring.plugin)
     implementation(libs.spring.boot.plugin)
     implementation(libs.dependency.management.plugin)
+    implementation(libs.kotlin.kapt.plugin)
+    implementation(libs.mapstruct)
+    implementation(libs.mapstruct.spring.extension)
+    implementation(libs.mapstruct.processor)
 }

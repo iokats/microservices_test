@@ -8,6 +8,9 @@ dependencies {
 
     implementation(project(":api"))
     implementation(project(":utilities"))
+    implementation(libs.mapstruct)
+    implementation(libs.mapstruct.spring.extension)
+    kapt(libs.mapstruct.processor)
 }
 
 tasks.named<BootJar>("bootJar") {
