@@ -15,3 +15,10 @@ Please, have a look into the following references:
 * [Docker Cheat Sheet: All the Most Essential Commands in One Place](https://www.hostinger.com/tutorials/docker-cheat-sheet?ppc_campaign=google_search_generic_hosting_all&bidkw=defaultkeyword&lo=20215&gad_source=1&gclid=EAIaIQobChMIw4a4gIPbhAMVjZZoCR2HvQYzEAAYAiAAEgI_z_D_BwE#Clean_Up_Commands)
 * [Docker cheatsheet](https://quickref.me/docker.html)
 
+### Persistence
+[The Spring official guide](https://github.com/spring-guides/tut-spring-boot-kotlin?tab=readme-ov-file#persistence-with-jpa) 
+says we shouldn't use kotlin data class with spring-data-jpa.
+>"Here we don’t use data classes with val properties because JPA is not designed to work with immutable classes or the 
+methods generated automatically by data classes. If you are using other Spring Data flavor, most of them are designed 
+to support such constructs so you should use classes like data class User(val login: String, …​) when using Spring 
+Data MongoDB, Spring Data JDBC, etc."
