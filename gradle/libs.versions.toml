@@ -5,6 +5,7 @@
 kotlin-gradle-plugin = "1.9.22"
 kotlin-spring-plugin = "1.9.22"
 kotlin-kapt-plugin = "1.9.23"
+kotlin-jpa-plugin = "1.9.23"
 spring-boot-plugin = "3.2.3"
 spring-data-mongodb = "3.2.3"
 spring-data-jpa = "3.2.3"
@@ -20,6 +21,7 @@ testcontainers = "1.19.7"
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin-gradle-plugin" }
 kotlin-spring-plugin = { module = "org.jetbrains.kotlin:kotlin-allopen", version.ref = "kotlin-spring-plugin" }
 kotlin-kapt-plugin = { module = "org.jetbrains.kotlin.kapt:org.jetbrains.kotlin.kapt.gradle.plugin", version.ref = "kotlin-kapt-plugin" }
+kotlin-jpa-plugin = { module = "org.jetbrains.kotlin:kotlin-noarg", version.ref = "kotlin-jpa-plugin" }
 
 spring-boot-plugin = { module = "org.springframework.boot:spring-boot-gradle-plugin", version.ref = "spring-boot-plugin" }
 spring-data-mongodb = { module = "org.springframework.boot:spring-boot-starter-data-mongodb", version.ref = "spring-data-mongodb" }

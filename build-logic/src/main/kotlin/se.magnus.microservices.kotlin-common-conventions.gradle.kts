@@ -9,6 +9,7 @@ plugins {
     id("org.jetbrains.kotlin.jvm")
     id("org.jetbrains.kotlin.plugin.spring")
     id("org.jetbrains.kotlin.kapt")
+    kotlin("plugin.noarg")
 }
 
 repositories {

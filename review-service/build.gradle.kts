@@ -2,6 +2,13 @@ import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
 	id("se.magnus.microservices.kotlin-application-conventions")
+
+	//kotlin("plugin.noarg") version "1.9.23"
+}
+
+noArg {
+
+	annotations("se.magnus.microservices.core.review.persistence.NoArg")
 }
 
 dependencies {

@@ -22,3 +22,14 @@ says we shouldn't use kotlin data class with spring-data-jpa.
 methods generated automatically by data classes. If you are using other Spring Data flavor, most of them are designed 
 to support such constructs so you should use classes like data class User(val login: String, …​) when using Spring 
 Data MongoDB, Spring Data JDBC, etc."
+
+#### Working with Spring Data Repositories
+The goal of the Spring Data repository abstraction is to significantly reduce the amount of boilerplate code required to
+implement data access layers for various persistence stores. For more details, please have a look into the following 
+reference:
+* [Working with Spring Data Repositories](https://docs.spring.io/spring-data/data-commons/docs/current/reference/html/#repositories)
+
+#### No-arg compiler plugin
+We added the [No-arg plugin](https://kotlinlang.org/docs/no-arg-plugin.html) for generating an additional zero-argument 
+constructor for classes with a specific annotation. This allows the Java Persistence API (JPA) to instantiate a class, 
+although it doesn't have the zero-parameter constructor from Kotlin or Java point of view.
