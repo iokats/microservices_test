@@ -36,5 +36,5 @@ interface ReviewService {
      * @param productId ID of the product
      */
     @DeleteMapping(value = ["/review"])
-    fun deleteReview(@RequestParam(value = "productId", required = true) productId: Int)
+    fun deleteReviews(@RequestParam(value = "productId", required = true) productId: Int)
 }

@@ -36,5 +36,5 @@ interface RecommendationService {
      * @param productId ID of the product
      */
     @DeleteMapping(value = ["/recommendation"])
-    fun deleteRecommendation(@RequestParam(value = "productId", required = true) productId: Int)
+    fun deleteRecommendations(@RequestParam(value = "productId", required = true) productId: Int)
 }
