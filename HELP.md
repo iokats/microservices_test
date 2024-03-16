@@ -27,9 +27,18 @@ Data MongoDB, Spring Data JDBC, etc."
 The goal of the Spring Data repository abstraction is to significantly reduce the amount of boilerplate code required to
 implement data access layers for various persistence stores. For more details, please have a look into the following 
 reference:
-* [Working with Spring Data Repositories](https://docs.spring.io/spring-data/data-commons/docs/current/reference/html/#repositories)
+* [Working with Spring Data Repositories](https://docs.spring.io/spring-data/data-commons/docs/current/reference/html/#repositories
 
 #### No-arg compiler plugin
 We added the [No-arg plugin](https://kotlinlang.org/docs/no-arg-plugin.html) for generating an additional zero-argument 
 constructor for classes with a specific annotation. This allows the Java Persistence API (JPA) to instantiate a class, 
 although it doesn't have the zero-parameter constructor from Kotlin or Java point of view.
+
+#### Enabling DuplicateKeyException in MongoDB
+We have to add the following spring data configuration: `spring.data.mongodb.auto-index-creation=true`
+Because in Spring Data MongoDB, automatic index creation is turned off by default.
+
+#### Enabling the OptimisticLockingFailureException in MySQL
+We have to add the following spring data configuration: `spring.jpa.hibernate.ddl-auto=create`
+* [How does spring.jpa.hibernate.ddl-auto property exactly work in Spring?](https://stackoverflow.com/questions/42135114/how-does-spring-jpa-hibernate-ddl-auto-property-exactly-work-in-spring)
+* [Locking in Spring Boot](https://aurigait.com/blog/locking-in-spring-boot/)

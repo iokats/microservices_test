@@ -1,7 +1,6 @@
 package se.magnus.microservices.composite.product.services
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -23,7 +22,7 @@ import se.magnus.microservices.utilities.http.HttpErrorInfo
 import java.io.IOException
 
 
-private val LOG: Logger = LoggerFactory.getLogger(ProductCompositeIntegration::class.java)
+private val LOG = LoggerFactory.getLogger(ProductCompositeIntegration::class.java)
 
 @Component
 class ProductCompositeIntegration @Autowired constructor(
