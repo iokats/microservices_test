@@ -6,5 +6,5 @@ data class Recommendation(
     val author: String,
     val rate: Int,
     val content: String,
-    var serviceAddress: String
+    val serviceAddress: String? = null
 )

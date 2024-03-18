@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController
 import se.magnus.api.core.recommendation.Recommendation
 import se.magnus.api.core.recommendation.RecommendationService
 import se.magnus.api.exceptions.InvalidInputException
+import se.magnus.microservices.core.recommendation.persistence.RecommendationEntity
 import se.magnus.microservices.core.recommendation.persistence.RecommendationRepository
 import se.magnus.microservices.utilities.http.ServiceUtil
 
@@ -46,9 +47,7 @@ class RecommendationServiceImpl @Autowired constructor(
         }
         val recommendationEntityList = repository.findByProductId(productId)
 
-        val recommendationApiList = mapper.entityListToApiList(recommendationEntityList)
-
-        recommendationApiList.forEach { it.serviceAddress = serviceUtil.serviceAddress }
+        val recommendationApiList = entityListToApiList(recommendationEntityList)
 
         LOG.debug("getRecommendations: response size: ${recommendationApiList.size}", )
 
@@ -60,5 +59,21 @@ class RecommendationServiceImpl @Autowired constructor(
         LOG.debug("deleteRecommendations: tries to delete recommendations for the product with productId: $productId")
 
         repository.deleteAll(repository.findByProductId(productId))
+    }
+
+    private fun entityListToApiList(recommendationEntityList: List<RecommendationEntity>): List<Recommendation> {
+
+        val recommendationApiList = mapper.entityListToApiList(recommendationEntityList)
+
+        return recommendationApiList.map {
+            Recommendation(
+                it.productId,
+                it.recommendationId,
+                it.author,
+                it.rate,
+                it.content,
+                serviceUtil.serviceAddress
+            )
+        }
     }
 }

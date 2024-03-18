@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController
 import se.magnus.api.core.review.Review
 import se.magnus.api.core.review.ReviewService
 import se.magnus.api.exceptions.InvalidInputException
+import se.magnus.microservices.core.review.persistence.ReviewEntity
 import se.magnus.microservices.core.review.persistence.ReviewRepository
 import se.magnus.microservices.utilities.http.ServiceUtil
 
@@ -45,9 +46,7 @@ class ReviewServiceImpl @Autowired constructor(
 
         val reviewEntityList = repository.findByProductId(productId)
 
-        val reviewApiList = mapper.entityListToApiList(reviewEntityList)
-
-        reviewApiList.forEach { it.serviceAddress = serviceUtil.serviceAddress }
+        val reviewApiList = entityListToApiList(reviewEntityList)
 
         LOG.debug("getReviews: response size: ${reviewApiList.size}")
 
@@ -59,5 +58,21 @@ class ReviewServiceImpl @Autowired constructor(
         LOG.debug("deleteReviews: tries to delete reviews for the product with productId: $productId")
 
         repository.deleteAll(repository.findByProductId(productId))
+    }
+
+    private fun entityListToApiList(reviewEntityList: List<ReviewEntity>): List<Review> {
+
+        val reviewApiList = mapper.entityListToApiList(reviewEntityList)
+
+        return reviewApiList.map {
+            Review(
+                it.productId,
+                it.reviewId,
+                it.author,
+                it.subject,
+                it.content,
+                serviceUtil.serviceAddress
+            )
+        }
     }
 }

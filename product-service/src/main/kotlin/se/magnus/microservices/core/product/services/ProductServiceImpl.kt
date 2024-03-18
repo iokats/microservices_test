@@ -9,6 +9,7 @@ import se.magnus.api.core.product.Product
 import se.magnus.api.core.product.ProductService
 import se.magnus.api.exceptions.InvalidInputException
 import se.magnus.api.exceptions.NotFoundException
+import se.magnus.microservices.core.product.persistence.ProductEntity
 import se.magnus.microservices.core.product.persistence.ProductRepository
 import se.magnus.microservices.utilities.http.ServiceUtil
 
@@ -46,8 +47,7 @@ class ProductServiceImpl @Autowired constructor(
         val productEntity = repository.findByProductId(productId)
             ?: throw NotFoundException("No product found for productId: $productId")
 
-        val response = mapper.entityToApi(productEntity)
-        response.serviceAddress = serviceUtil.serviceAddress
+        val response = entityToApi(productEntity)
 
         LOG.debug("getProduct: found productId: ${response.productId}")
 
@@ -59,5 +59,12 @@ class ProductServiceImpl @Autowired constructor(
         LOG.debug("deleteProduct: tries to delete an entity with productId: $productId")
 
         repository.findByProductId(productId)?.also(repository::delete)
+    }
+
+    private fun entityToApi(productEntity: ProductEntity): Product {
+
+        val response = mapper.entityToApi(productEntity)
+
+        return Product(response.productId, response.name, response.weight, serviceUtil.serviceAddress)
     }
 }

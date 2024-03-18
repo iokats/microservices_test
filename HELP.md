@@ -27,7 +27,7 @@ Data MongoDB, Spring Data JDBC, etc."
 The goal of the Spring Data repository abstraction is to significantly reduce the amount of boilerplate code required to
 implement data access layers for various persistence stores. For more details, please have a look into the following 
 reference:
-* [Working with Spring Data Repositories](https://docs.spring.io/spring-data/data-commons/docs/current/reference/html/#repositories
+* [Working with Spring Data Repositories](https://docs.spring.io/spring-data/data-commons/docs/current/reference/html/#repositories)
 
 #### No-arg compiler plugin
 We added the [No-arg plugin](https://kotlinlang.org/docs/no-arg-plugin.html) for generating an additional zero-argument 

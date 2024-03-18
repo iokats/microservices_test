@@ -4,5 +4,5 @@ data class Product(
     val productId: Int,
     val name: String,
     val weight: Int,
-    var serviceAddress: String
+    val serviceAddress: String? = null
 )

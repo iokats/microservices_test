@@ -6,5 +6,5 @@ data class Review(
     val author: String,
     val subject: String,
     val content: String,
-    var serviceAddress: String
+    val serviceAddress: String? = null
 )
