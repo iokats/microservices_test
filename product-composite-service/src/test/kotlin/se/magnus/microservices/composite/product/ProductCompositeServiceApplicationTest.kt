@@ -32,9 +32,6 @@ private const val PRODUCT_ID_INVALID = 3
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 class ProductCompositeServiceApplicationTest {
 
-    @MockBean
-    private lateinit var serviceAddresses: ServiceAddresses
-
     @Autowired
     private lateinit var client: WebTestClient
 
@@ -64,7 +61,7 @@ class ProductCompositeServiceApplicationTest {
     @Test
     fun createCompositeProduct1() {
 
-        val compositeProduct = ProductAggregate(1, "name", 123, listOf(), listOf(), serviceAddresses)
+        val compositeProduct = ProductAggregate(1, "name", 123, listOf(), listOf())
 
         postAndVerifyProduct(compositeProduct, OK)
     }
@@ -79,8 +76,7 @@ class ProductCompositeServiceApplicationTest {
             "name",
             123,
             recommendations,
-            reviews,
-            serviceAddresses)
+            reviews)
 
         postAndVerifyProduct(compositeProduct, OK)
     }
@@ -93,8 +89,7 @@ class ProductCompositeServiceApplicationTest {
             "name",
             1,
             recommendations,
-            reviews,
-            serviceAddresses)
+            reviews)
 
         postAndVerifyProduct(compositeProduct, OK)
 
