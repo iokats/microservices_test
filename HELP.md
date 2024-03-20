@@ -41,4 +41,5 @@ Because in Spring Data MongoDB, automatic index creation is turned off by defaul
 #### Enabling the OptimisticLockingFailureException in MySQL
 We have to add the following spring data configuration: `spring.jpa.hibernate.ddl-auto=create`
 * [How does spring.jpa.hibernate.ddl-auto property exactly work in Spring?](https://stackoverflow.com/questions/42135114/how-does-spring-jpa-hibernate-ddl-auto-property-exactly-work-in-spring)
+* [Spring Boot Database Initialization](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto.data-initialization)
 * [Locking in Spring Boot](https://aurigait.com/blog/locking-in-spring-boot/)
