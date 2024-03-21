@@ -43,7 +43,7 @@ services:
       - "27017:27017"
     command: mongod
     healthcheck:
-      test: "mongo --eval 'db.stats().ok'"
+      test: "mongostat -n 1"
       interval: 5s
       timeout: 2s
       retries: 60
