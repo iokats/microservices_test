@@ -1,14 +1,14 @@
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
-	id("se.magnus.microservices.kotlin-application-conventions")
+	id("com.ykatsatos.microservices.kotlin-application-conventions")
 
 	//kotlin("plugin.noarg") version "1.9.23"
 }
 
 noArg {
 
-	annotations("se.magnus.microservices.core.review.persistence.NoArg")
+	annotations("com.ykatsatos.microservices.core.review.persistence.NoArg")
 }
 
 dependencies {
@@ -28,6 +28,6 @@ dependencies {
 
 tasks.named<BootJar>("bootJar") {
 	manifest {
-		attributes("Start-Class" to "se.magnus.microservices.core.review.ReviewServiceApplicationKt")
+		attributes("Start-Class" to "com.ykatsatos.microservices.core.review.ReviewServiceApplicationKt")
 	}
 }

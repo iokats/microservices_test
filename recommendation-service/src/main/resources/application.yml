@@ -9,7 +9,7 @@ spring.data.mongodb:
 logging:
   level:
     root: INFO
-    se.magnus: DEBUG
+    com.ykatsatos: DEBUG
     org.springframework.data.mongodb.core.MongoTemplate: DEBUG
 
 ---

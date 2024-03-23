@@ -1,7 +1,7 @@
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
-	id("se.magnus.microservices.kotlin-application-conventions")
+	id("com.ykatsatos.microservices.kotlin-application-conventions")
 }
 
 dependencies {
@@ -13,6 +13,6 @@ dependencies {
 
 tasks.named<BootJar>("bootJar") {
 	manifest {
-		attributes("Start-Class" to "se.magnus.microservices.composite.product.ProductCompositeServiceApplicationKt")
+		attributes("Start-Class" to "com.ykatsatos.microservices.composite.product.ProductCompositeServiceApplicationKt")
 	}
 }
