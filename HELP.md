@@ -8,12 +8,48 @@ Please, have a look into the following references:
 * [Sharing build logic between subprojects Sample](https://docs.gradle.org/current/samples/sample_convention_plugins.html)
 
 ### Docker
+Docker is a platform for developing, shipping, and running applications in containers. It simplifies application
+deployment by providing a consistent environment across different systems. With Docker, developers can build, test,
+and deploy applications quickly and efficiently, improving collaboration and productivity.
+
+#### Docker Architecture
+Docker architecture consists of five main components: server, client, container, image, volume and registry.
+1. **Docker Server** typically refers to the Docker Engine, which is the core component of the Docker platform 
+responsible for creating and managing containers. It provides an API and command-line interface (CLI) for interacting 
+with containers, allowing users to build, run, and manage containerized applications. The Docker Engine runs as a daemon 
+process on the host operating system and manages container lifecycle, networking, storage, and other container-related 
+tasks.
+2. The **Docker Client** is a command-line interface (CLI) tool used to interact with the Docker Engine, allowing users to 
+build, run, and manage Docker containers. It sends commands to the Docker Engine via its REST API, enabling users to 
+perform various tasks such as creating, starting, stopping, and inspecting containers, as well as managing Docker images, 
+networks, volumes, and more. The Docker Client provides a simple and intuitive interface for developers and 
+administrators to work with Docker containers and related resources.
+3. A **Docker Container** is a lightweight, standalone, and executable package that contains everything needed to run a 
+software application, including code, runtime, system libraries, and dependencies. Containers provide a consistent and 
+isolated environment for running applications, allowing them to be easily deployed across different systems without 
+changes. Docker containers are portable, scalable, and efficient, making them ideal for packaging, shipping, and 
+deploying applications in various environments, from development to production.
+4. A **Docker Image** is a preconfigured template that specifies what should be included in a Docker container. Usually, 
+images are downloaded from websites like Docker Hub. However, it’s also possible to create a custom image with the help 
+of Dockerfile.
+5. The **Docker Registry** is a central repository that stores and manages Docker images. It is a server-based system that 
+lets users store and share Docker images with others, making it easy to distribute and deploy applications. The most 
+notable Docker registry is Docker Hub.
+6. **Docker Volumes** are a feature that allows data to persist beyond the lifespan of a container. They provide a way 
+to manage and store data separately from the container's filesystem, enabling data sharing between containers and between 
+the host machine and containers. Volumes are commonly used for storing databases, log files, configuration files, and other 
+persistent data in Dockerized applications. They offer flexibility, scalability, and performance benefits, making them 
+essential for building reliable and scalable container-based systems
+
+#### References
 * [Install Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/#uninstall-docker-engine)
 * [How To Install and Use Docker Compose on Ubuntu 20.04](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-compose-on-ubuntu-20-04)
 * [Linux post-installation steps for Docker Engine](https://docs.docker.com/engine/install/linux-postinstall/)
 * [Unlock the Full Potential of Docker: Run Docker-Compose without Sudo](https://sujanrajtuladhar.com.np/unlock-the-full-potential-of-docker-run-docker-compose-without-sudo)
 * [Docker Cheat Sheet: All the Most Essential Commands in One Place](https://www.hostinger.com/tutorials/docker-cheat-sheet?ppc_campaign=google_search_generic_hosting_all&bidkw=defaultkeyword&lo=20215&gad_source=1&gclid=EAIaIQobChMIw4a4gIPbhAMVjZZoCR2HvQYzEAAYAiAAEgI_z_D_BwE#Clean_Up_Commands)
 * [Docker cheatsheet](https://quickref.me/docker.html)
+
+
 
 ### Persistence
 [The Spring official guide](https://github.com/spring-guides/tut-spring-boot-kotlin?tab=readme-ov-file#persistence-with-jpa) 
@@ -43,3 +79,16 @@ We have to add the following spring data configuration: `spring.jpa.hibernate.dd
 * [How does spring.jpa.hibernate.ddl-auto property exactly work in Spring?](https://stackoverflow.com/questions/42135114/how-does-spring-jpa-hibernate-ddl-auto-property-exactly-work-in-spring)
 * [Spring Boot Database Initialization](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto.data-initialization)
 * [Locking in Spring Boot](https://aurigait.com/blog/locking-in-spring-boot/)
+
+#### Testcontainer
+Testcontainers is a Java library that provides lightweight, disposable containers for integration testing. It allows 
+developers to define and manage Docker containers directly within their test code, making it easy to set up isolated 
+environments for testing against external dependencies such as databases, message brokers, and web services. Testcontainers 
+automates the container lifecycle, handling container creation, startup, and teardown, ensuring consistent and reliable 
+test environments. It supports a wide range of containerized technologies and integrates seamlessly with popular testing 
+frameworks like JUnit and TestNG. Overall, Testcontainers simplifies the process of writing and running integration tests 
+by providing fast, reproducible, and portable test environments.
+* [Official Site](https://testcontainers.com/)
+* [Modules which are supported by Testcontainers](https://testcontainers.com/modules/)
+* [Getting Started Guides](https://testcontainers.com/guides/)
+* [Examples in GitHub](https://github.com/testcontainers/testcontainers-java/tree/main/examples/spring-boot-kotlin-redis)
