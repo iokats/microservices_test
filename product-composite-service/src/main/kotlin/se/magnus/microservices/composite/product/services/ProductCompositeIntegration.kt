@@ -36,7 +36,7 @@ class ProductCompositeIntegration @Autowired constructor(
     @param:Value("\${app.review-service.port}") private val reviewServicePort: String,
 ): ProductService, RecommendationService, ReviewService {
 
-    private val productServiceUrl = "http://$productServiceHost:$productServicePort/product/"
+    private val productServiceUrl = "http://$productServiceHost:$productServicePort/product"
     private val recommendationServiceUrl = "http://$recommendationServiceHost:$recommendationServicePort/recommendation"
     private val reviewServiceUrl = "http://$reviewServiceHost:$reviewServicePort/review"
 

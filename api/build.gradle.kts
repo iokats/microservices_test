@@ -6,7 +6,7 @@ plugins {
 
 dependencies {
 
-    implementation(libs.springdoc.openapi)
+    implementation(libs.springdoc.openapi.common)
 }
 
 tasks.named<BootJar>("bootJar") {

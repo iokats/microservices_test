@@ -11,8 +11,8 @@ spring-data-mongodb = "3.2.3"
 spring-data-jpa = "3.2.3"
 mysql-connector-j = "8.3.0"
 dependency-management-plugin = "1.1.4"
-springdoc-openapi = "1.7.0"
-springdoc-openapi-webflux = "1.7.0"
+springdoc-openapi-common = "2.4.0"
+springdoc-openapi-webflux = "2.4.0"
 mapstruct-spring-extensions = "1.1.1"
 mapstruct = "1.5.5.Final"
 testcontainers = "1.19.7"
@@ -30,8 +30,8 @@ mysql-connector-j = { module = "com.mysql:mysql-connector-j", version.ref = "mys
 
 dependency-management-plugin = { module = "io.spring.gradle:dependency-management-plugin", version.ref = "dependency-management-plugin" }
 
-springdoc-openapi = { module = "org.springdoc:springdoc-openapi-common", version.ref = "springdoc-openapi" }
-springdoc-openapi-webflux = { module = "org.springdoc:springdoc-openapi-webflux-ui", version.ref = "springdoc-openapi-webflux" }
+springdoc-openapi-common = { module = "org.springdoc:springdoc-openapi-starter-common", version.ref = "springdoc-openapi-common" }
+springdoc-openapi-webflux = { module = "org.springdoc:springdoc-openapi-starter-webflux-ui", version.ref = "springdoc-openapi-webflux" }
 
 mapstruct = { module = "org.mapstruct:mapstruct", version.ref = "mapstruct" }
 mapstruct-spring-extension = { module = "org.mapstruct.extensions.spring:mapstruct-spring-extensions", version.ref = "mapstruct-spring-extensions" }
