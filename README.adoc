@@ -14,7 +14,7 @@ deployment by providing a consistent environment across different systems. With 
 and deploy applications quickly and efficiently, improving collaboration and productivity.
 
 === Docker Architecture
-Docker architecture consists of five main components: server, client, container, image, volume and registry.
+Docker architecture consists of six main components: server, client, container, image, volume and registry.
 
 1. **Docker Server** typically refers to the Docker Engine, which is the core component of the Docker platform
 responsible for creating and managing containers. It provides an API and command-line interface (CLI) for interacting 
