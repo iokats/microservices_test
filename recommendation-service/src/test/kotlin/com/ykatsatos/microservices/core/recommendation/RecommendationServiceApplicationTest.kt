@@ -13,6 +13,8 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import reactor.core.publisher.Mono
 import com.ykatsatos.api.core.recommendation.Recommendation
 import com.ykatsatos.microservices.core.recommendation.persistence.RecommendationRepository
+import kotlinx.coroutines.flow.count
+import kotlinx.coroutines.runBlocking
 
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
@@ -25,13 +27,13 @@ class RecommendationServiceApplicationTest {
     private lateinit var repository: RecommendationRepository
 
     @BeforeEach
-    fun setUp() {
+    fun setUp() = runBlocking {
 
         repository.deleteAll()
     }
 
     @Test
-    fun getRecommendationsByProductId() {
+    fun getRecommendationsByProductId(): Unit = runBlocking {
 
         // given
         val productId = 1
@@ -44,7 +46,7 @@ class RecommendationServiceApplicationTest {
         val response = getAndVerifyRecommendationsByProductId(productId, OK)
 
         // then
-        assertEquals(3, repository.findByProductId(productId).size)
+        assertEquals(3, repository.findByProductId(productId).count())
 
         response
             .jsonPath("$.length()").isEqualTo(3)
@@ -53,7 +55,7 @@ class RecommendationServiceApplicationTest {
     }
 
     @Test
-    fun duplicateError() {
+    fun duplicateError(): Unit = runBlocking {
 
         // given
         val productId = 1
@@ -73,25 +75,25 @@ class RecommendationServiceApplicationTest {
     }
 
     @Test
-    fun deleteRecommendations() {
+    fun deleteRecommendations(): Unit = runBlocking {
 
         // given
         val productId = 1
         val recommendationId = 1
 
         postAndVerifyRecommendation(productId, recommendationId, OK)
-        assertEquals(1, repository.findByProductId(productId).size)
+        assertEquals(1, repository.findByProductId(productId).count())
 
         // when
         deleteAndVerifyRecommendationsByProductId(productId, OK)
 
         // then
-        assertEquals(0, repository.findByProductId(productId).size)
+        assertEquals(0, repository.findByProductId(productId).count())
         deleteAndVerifyRecommendationsByProductId(productId, OK)
     }
 
     @Test
-    fun getRecommendationsMissingParameter() {
+    fun getRecommendationsMissingParameter(): Unit = runBlocking {
 
         // given
         val productIdQuery = ""
@@ -106,7 +108,7 @@ class RecommendationServiceApplicationTest {
     }
 
     @Test
-    fun getRecommendationsInvalidParameter() {
+    fun getRecommendationsInvalidParameter(): Unit = runBlocking {
 
         // given
         val productIdQuery = "?productId=no-integer"
@@ -121,7 +123,7 @@ class RecommendationServiceApplicationTest {
     }
 
     @Test
-    fun getRecommendationsNotFound() {
+    fun getRecommendationsNotFound(): Unit = runBlocking {
 
         // given
         val productIdQuery = "?productionId=113"
@@ -134,7 +136,7 @@ class RecommendationServiceApplicationTest {
     }
 
     @Test
-    fun getRecommendationsInvalidParameterNegativeValue() {
+    fun getRecommendationsInvalidParameterNegativeValue(): Unit = runBlocking {
 
         // given
         val productIdInvalid = -1

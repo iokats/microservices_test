@@ -19,7 +19,7 @@ interface ProductService {
      * @return A JSON representation of the newly created product
      */
     @PostMapping(value = ["/product"], consumes = ["application/json"], produces = ["application/json"])
-    fun createProduct(@RequestBody body: Product): Product
+    suspend fun createProduct(@RequestBody body: Product): Product
 
     /**
      * Sample usage: "curl $HOST:$PORT/product/1".
@@ -28,7 +28,7 @@ interface ProductService {
      *  @return the product, if found, else null
      */
     @GetMapping(value = ["/product/{productId}"], produces = ["application/json"])
-    fun getProduct(@PathVariable productId: Int): Product
+    suspend fun getProduct(@PathVariable productId: Int): Product
 
     /**
      * Sample usage: "curl -X DELETE $HOST:$PORT/product/1".
@@ -36,5 +36,5 @@ interface ProductService {
      * @param productId ID of the product
      */
     @DeleteMapping(value = ["/product/{productId}"])
-    fun deleteProduct(@PathVariable productId: Int)
+    suspend fun deleteProduct(@PathVariable productId: Int)
 }

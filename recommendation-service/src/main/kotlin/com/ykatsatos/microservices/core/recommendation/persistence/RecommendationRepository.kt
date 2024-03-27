@@ -1,8 +1,9 @@
 package com.ykatsatos.microservices.core.recommendation.persistence
 
-import org.springframework.data.repository.CrudRepository
+import kotlinx.coroutines.flow.Flow
+import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 
-interface RecommendationRepository: CrudRepository<RecommendationEntity, String> {
+interface RecommendationRepository: CoroutineCrudRepository<RecommendationEntity, String> {
 
-    fun findByProductId(productId: Int): List<RecommendationEntity>
+    fun findByProductId(productId: Int): Flow<RecommendationEntity>
 }

@@ -18,6 +18,7 @@ import org.springframework.dao.DuplicateKeyException
 import org.testcontainers.containers.MongoDBContainer
 import com.ykatsatos.microservices.core.product.persistence.ProductEntity
 import com.ykatsatos.microservices.core.product.persistence.ProductRepository
+import kotlinx.coroutines.runBlocking
 import java.util.stream.Collectors
 
 
@@ -52,7 +53,7 @@ class PersistenceTests {
     private lateinit var savedEntity: ProductEntity
 
     @BeforeEach
-    fun setUpDB() {
+    fun setUpDB() = runBlocking {
 
         repository.deleteAll()
 
@@ -63,37 +64,37 @@ class PersistenceTests {
     }
 
     @Test
-    fun create() {
+    fun create() = runBlocking {
 
         val newEntity = ProductEntity(2, "name", 125)
         repository.save(newEntity)
 
-        val foundEntity = repository.findById(newEntity.id).get()
+        val foundEntity = repository.findById(newEntity.id)!!
         assertEqualsProduct(newEntity, foundEntity)
 
         assertEquals(2, repository.count())
     }
 
     @Test
-    fun update() {
+    fun update() = runBlocking {
 
         savedEntity.name = "name-2"
         repository.save(savedEntity)
 
-        val foundEntity = repository.findById(savedEntity.id).get()
+        val foundEntity = repository.findById(savedEntity.id)!!
         assertEquals(1, foundEntity.version)
         assertEquals("name-2", foundEntity.name)
     }
 
     @Test
-    fun delete() {
+    fun delete() = runBlocking {
 
         repository.delete(savedEntity)
         assertFalse(repository.existsById(savedEntity.id))
     }
 
     @Test
-    fun getByProductId() {
+    fun getByProductId() = runBlocking {
 
         val entity = repository.findByProductId(savedEntity.productId)
 
@@ -105,16 +106,16 @@ class PersistenceTests {
     fun duplicateError() {
         assertThrows(DuplicateKeyException::class.java) {
             val entity = ProductEntity(savedEntity.productId, "n", 1)
-            repository.save(entity)
+            runBlocking {  repository.save(entity) }
         }
     }
 
     @Test
-    fun optimisticLockError() {
+    fun optimisticLockError() = runBlocking {
 
         // Store the saved entity in two separate entity objects
-        val entity1 = repository.findById(savedEntity.id).get()
-        val entity2 = repository.findById(savedEntity.id).get()
+        val entity1 = repository.findById(savedEntity.id)!!
+        val entity2 = repository.findById(savedEntity.id)!!
 
         // Update the entity using the first entity object
         entity1.name = "n1"
@@ -124,36 +125,13 @@ class PersistenceTests {
         // This should fail since the second entity now holds an old version number, i.e. an Optimistic Lock Error
         assertThrows(OptimisticLockingFailureException::class.java) {
             entity2.name = "n2"
-            repository.save(entity2)
+            runBlocking { repository.save(entity2) }
         }
 
         // Get the updated entity from the database and verify its new state
-        val updatedEntity = repository.findById(savedEntity.id).get()
+        val updatedEntity = repository.findById(savedEntity.id)!!
         assertEquals(1, updatedEntity.version as Int)
         assertEquals("n1", updatedEntity.name)
-    }
-
-    @Test
-    fun paging() {
-        repository.deleteAll()
-
-        val newProducts: List<ProductEntity> = IntRange(1001, 1010).map { i -> ProductEntity(i, "name $i", i) }
-        repository.saveAll(newProducts)
-
-        var nextPage: Pageable = PageRequest.of(0, 4, ASC, "productId")
-        nextPage = testNextPage(nextPage, "[1001, 1002, 1003, 1004]", true)
-        nextPage = testNextPage(nextPage, "[1005, 1006, 1007, 1008]", true)
-        testNextPage(nextPage, "[1009, 1010]", false)
-    }
-
-    private fun testNextPage(nextPage: Pageable, expectedProductIds: String, expectsNextPage: Boolean): Pageable {
-        val productPage: Page<ProductEntity> = repository.findAll(nextPage)
-        assertEquals(
-            expectedProductIds,
-            productPage.content.stream().map { p -> p.productId }.collect(Collectors.toList()).toString()
-        )
-        assertEquals(expectsNextPage, productPage.hasNext())
-        return productPage.nextPageable()
     }
 
     private fun assertEqualsProduct(expectedEntity: ProductEntity, actualEntity: ProductEntity) {

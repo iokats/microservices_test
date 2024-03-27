@@ -22,7 +22,7 @@ class ProductServiceImpl @Autowired constructor(
     private val serviceUtil: ServiceUtil
 ) : ProductService {
 
-    override fun createProduct(body: Product): Product {
+    override suspend fun createProduct(body: Product): Product {
 
         try {
             val productEntity = mapper.apiToEntity(body)
@@ -39,7 +39,7 @@ class ProductServiceImpl @Autowired constructor(
         }
     }
 
-    override fun getProduct(productId: Int): Product {
+    override suspend fun getProduct(productId: Int): Product {
 
         if (productId < 1) {
             throw InvalidInputException("Invalid productId: $productId")
@@ -55,11 +55,11 @@ class ProductServiceImpl @Autowired constructor(
         return response
     }
 
-    override fun deleteProduct(productId: Int) {
+    override suspend fun deleteProduct(productId: Int) {
 
         LOG.debug("deleteProduct: tries to delete an entity with productId: $productId")
 
-        repository.findByProductId(productId)?.also(repository::delete)
+        repository.findByProductId(productId)?.also{ productEntity -> repository.delete(productEntity) }
     }
 
     private fun entityToApi(productEntity: ProductEntity): Product {

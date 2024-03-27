@@ -90,6 +90,7 @@ We have to add the following spring data configuration: `spring.jpa.hibernate.dd
 * https://stackoverflow.com/questions/42135114/how-does-spring-jpa-hibernate-ddl-auto-property-exactly-work-in-spring[How does spring.jpa.hibernate.ddl-auto property exactly work in Spring?]
 * https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto.data-initialization[Spring Boot Database Initialization]
 * https://aurigait.com/blog/locking-in-spring-boot/[Locking in Spring Boot]
+* https://blog.mimacom.com/testing-optimistic-locking-handling-spring-boot-jpa/[Testing Optimistic Locking Handling with Spring Boot and JPA]
 
 === Testcontainer
 [.text-justify]
@@ -105,3 +106,25 @@ by providing fast, reproducible, and portable test environments.
 * https://testcontainers.com/modules/[Modules which are supported by Testcontainers]
 * https://testcontainers.com/guides/[Getting Started Guides]
 * https://github.com/testcontainers/testcontainers-java/tree/main/examples/spring-boot-kotlin-redis[Examples in GitHub]
+
+== Reactive Microservice
+Reactive Programming is a programming paradigm that allows developers to build applications that react to changes in data
+streams and handle asynchronous events efficiently. It emphasizes declarative and event-driven programming models, making
+it easier to manage complex asynchronous operations.
+
+Main Point for analysis => no-blocking back pressure.
+In summary, "asynchronous streams of data with non-blocking back pressure" describes a programming model where data
+flows asynchronously between components, with operations performed non-blockingly, and back pressure applied to control
+the flow of data and prevent overwhelm in downstream components. This model is commonly used in reactive programming
+frameworks and systems to build scalable, responsive, and resilient applications.
+
+No-blocking, back pressure
+* https://reactivemanifesto.org/pdf/the-reactive-manifesto-2.0.pdf[Reactive Manifesto]
+* https://spring.io/reactive[Reactive]
+* https://codersee.com/reactive-programming-in-kotlin-a-step-by-step-guide/[Reactive Programming in Kotlin: A Step-by-Step Guide]
+* https://www.baeldung.com/r2dbc[R2DBC- Reactive Relational Database Connectivity]
+* https://github.com/asyncer-io/r2dbc-mysql[R2DBC for MySQL]
+* https://www.bezkoder.com/spring-r2dbc-mysql/[Spring Boot R2DBC MySQL Example]
+* https://spring.io/blog/2019/04/12/going-reactive-with-spring-coroutines-and-kotlin-flow[Going Reactive with Spring, Coroutines and Kotlin Flow]
+* https://spring.io/guides/tutorials/spring-webflux-kotlin-rsocket[Spring Boot with Kotlin Coroutines and RSocket]
+* https://docs.spring.io/spring-data/mongodb/reference/kotlin/coroutines.html

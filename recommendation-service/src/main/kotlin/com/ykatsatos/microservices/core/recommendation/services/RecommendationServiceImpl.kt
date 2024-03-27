@@ -11,6 +11,8 @@ import com.ykatsatos.api.exceptions.InvalidInputException
 import com.ykatsatos.microservices.core.recommendation.persistence.RecommendationEntity
 import com.ykatsatos.microservices.core.recommendation.persistence.RecommendationRepository
 import com.ykatsatos.microservices.utilities.http.ServiceUtil
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 private val LOG: Logger = LoggerFactory.getLogger(RecommendationServiceImpl::class.java)
 
@@ -21,7 +23,7 @@ class RecommendationServiceImpl @Autowired constructor(
     private val serviceUtil: ServiceUtil
 ): RecommendationService {
 
-    override fun createRecommendation(body: Recommendation): Recommendation {
+    override suspend fun createRecommendation(body: Recommendation): Recommendation {
 
         try {
 
@@ -41,40 +43,35 @@ class RecommendationServiceImpl @Autowired constructor(
         }
     }
 
-    override fun getRecommendations(productId: Int): List<Recommendation> {
+    override fun getRecommendations(productId: Int): Flow<Recommendation> {
 
         if (productId < 1) {
             throw InvalidInputException("Invalid productId: $productId")
         }
-        val recommendationEntityList = repository.findByProductId(productId)
 
-        val recommendationApiList = entityListToApiList(recommendationEntityList)
+        LOG.debug("getRecommendations")
 
-        LOG.debug("getRecommendations: response size: ${recommendationApiList.size}", )
-
-        return recommendationApiList
+        return repository.findByProductId(productId).map(this::entityToApi)
     }
 
-    override fun deleteRecommendations(productId: Int) {
+    override suspend fun deleteRecommendations(productId: Int) {
 
         LOG.debug("deleteRecommendations: tries to delete recommendations for the product with productId: $productId")
 
         repository.deleteAll(repository.findByProductId(productId))
     }
 
-    private fun entityListToApiList(recommendationEntityList: List<RecommendationEntity>): List<Recommendation> {
+    private fun entityToApi(recommendationEntity: RecommendationEntity): Recommendation {
 
-        val recommendationApiList = mapper.entityListToApiList(recommendationEntityList)
+        val recommendationApi = mapper.entityToApi(recommendationEntity)
 
-        return recommendationApiList.map {
-            Recommendation(
-                it.productId,
-                it.recommendationId,
-                it.author,
-                it.rate,
-                it.content,
-                serviceUtil.serviceAddress
-            )
-        }
+        return Recommendation(
+            recommendationApi.productId,
+            recommendationApi.recommendationId,
+            recommendationApi.author,
+            recommendationApi.rate,
+            recommendationApi.content,
+            serviceUtil.serviceAddress
+        )
     }
 }

@@ -5,6 +5,7 @@ import org.mapstruct.Mapping
 import org.mapstruct.Mappings
 import com.ykatsatos.api.core.recommendation.Recommendation
 import com.ykatsatos.microservices.core.recommendation.persistence.RecommendationEntity
+import kotlinx.coroutines.flow.Flow
 
 @Mapper(componentModel = "spring")
 interface RecommendationMapper {
@@ -18,8 +19,4 @@ interface RecommendationMapper {
         Mapping(target = "version", ignore = true)
     )
     fun apiToEntity(api: Recommendation): RecommendationEntity
-
-    fun entityListToApiList(entity: List<RecommendationEntity>): List<Recommendation>
-
-    fun apiListToEntityList(entity: List<Recommendation>): List<RecommendationEntity>
 }

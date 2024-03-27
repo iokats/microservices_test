@@ -16,6 +16,9 @@ import org.springframework.test.context.DynamicPropertySource
 import org.testcontainers.containers.MongoDBContainer
 import com.ykatsatos.microservices.core.recommendation.persistence.RecommendationEntity
 import com.ykatsatos.microservices.core.recommendation.persistence.RecommendationRepository
+import kotlinx.coroutines.flow.count
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 
 
 @DataMongoTest
@@ -49,7 +52,7 @@ class PersistenceTests {
     private lateinit var savedEntity: RecommendationEntity
 
     @BeforeEach
-    fun setUpDB() {
+    fun setUpDB() = runBlocking {
 
         repository.deleteAll()
 
@@ -60,54 +63,54 @@ class PersistenceTests {
     }
 
     @Test
-    fun create() {
+    fun create()  = runBlocking {
         val newEntity = RecommendationEntity(1, 3, "a", 3, "c")
         repository.save(newEntity)
 
-        val foundEntity = repository.findById(newEntity.id).get()
+        val foundEntity = repository.findById(newEntity.id)!!
         assertEqualsRecommendation(newEntity, foundEntity)
 
         assertEquals(2, repository.count())
     }
 
     @Test
-    fun update() {
+    fun update()  = runBlocking {
         savedEntity.author = "a2"
         repository.save(savedEntity)
 
-        val foundEntity = repository.findById(savedEntity.id).get()
+        val foundEntity = repository.findById(savedEntity.id)!!
         assertEquals(1, foundEntity.version!!.toLong())
         assertEquals("a2", foundEntity.author)
     }
 
     @Test
-    fun delete() {
+    fun delete()  = runBlocking {
         repository.delete(savedEntity)
         assertFalse(repository.existsById(savedEntity.id))
     }
 
     @Test
-    fun getByProductId() {
+    fun getByProductId()  = runBlocking {
         val entityList = repository.findByProductId(savedEntity.productId)
 
-        assertThat(entityList, hasSize(1))
-        assertEqualsRecommendation(savedEntity, entityList[0])
+        assertEquals(1, entityList.count())
+        assertEqualsRecommendation(savedEntity, entityList.first())
     }
 
     @Test
     fun duplicateError() {
         assertThrows(DuplicateKeyException::class.java) {
             val entity = RecommendationEntity(1, 2, "a", 3, "c")
-            repository.save(entity)
+            runBlocking { repository.save(entity) }
         }
     }
 
     @Test
-    fun optimisticLockError() {
+    fun optimisticLockError() = runBlocking {
         // Store the saved entity in two separate entity objects
 
-        val entity1 = repository.findById(savedEntity.id).get()
-        val entity2 = repository.findById(savedEntity.id).get()
+        val entity1 = repository.findById(savedEntity.id)!!
+        val entity2 = repository.findById(savedEntity.id)!!
 
         // Update the entity using the first entity object
         entity1.author = "a1"
@@ -117,11 +120,11 @@ class PersistenceTests {
         // This should fail since the second entity now holds an old version number, i.e. an Optimistic Lock Error
         assertThrows(OptimisticLockingFailureException::class.java) {
             entity2.author = "a2"
-            repository.save(entity2)
+            runBlocking { repository.save(entity2) }
         }
 
         // Get the updated entity from the database and verify its new state
-        val updatedEntity = repository.findById(savedEntity.id).get()
+        val updatedEntity = repository.findById(savedEntity.id)!!
         assertEquals(1, updatedEntity.version as Int)
         assertEquals("a1", updatedEntity.author)
     }

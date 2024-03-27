@@ -1,9 +1,8 @@
 package com.ykatsatos.microservices.core.product.persistence
 
-import org.springframework.data.repository.CrudRepository
-import org.springframework.data.repository.PagingAndSortingRepository
+import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 
-interface ProductRepository: PagingAndSortingRepository<ProductEntity, String>, CrudRepository<ProductEntity, String> {
+interface ProductRepository: CoroutineCrudRepository<ProductEntity, String> {
 
-    fun findByProductId(productId: Int): ProductEntity?
+    suspend fun findByProductId(productId: Int): ProductEntity?
 }

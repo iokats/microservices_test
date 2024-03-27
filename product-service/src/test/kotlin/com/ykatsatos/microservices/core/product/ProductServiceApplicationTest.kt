@@ -13,6 +13,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import reactor.core.publisher.Mono.just
 import com.ykatsatos.api.core.product.Product
 import com.ykatsatos.microservices.core.product.persistence.ProductRepository
+import kotlinx.coroutines.runBlocking
 
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
@@ -25,13 +26,13 @@ class ProductServiceApplicationTest {
     private lateinit var repository: ProductRepository
 
     @BeforeEach
-    fun setUp() {
+    fun setUp() = runBlocking {
 
         repository.deleteAll()
     }
 
     @Test
-    fun getProductById() {
+    fun getProductById(): Unit = runBlocking  {
 
         // given
         val productId = 1
@@ -45,7 +46,7 @@ class ProductServiceApplicationTest {
     }
 
     @Test
-    fun duplicateError() {
+    fun duplicateError(): Unit = runBlocking {
 
         // given
         val productId = 1
@@ -61,7 +62,7 @@ class ProductServiceApplicationTest {
     }
 
     @Test
-    fun deleteProduct() {
+    fun deleteProduct(): Unit = runBlocking {
 
         // given
         val productId = 1
@@ -78,7 +79,7 @@ class ProductServiceApplicationTest {
     }
 
     @Test
-    fun getProductInvalidParameterString() {
+    fun getProductInvalidParameterString(): Unit = runBlocking {
 
         // given
         val productId = "no-integer"
@@ -93,7 +94,7 @@ class ProductServiceApplicationTest {
     }
 
     @Test
-    fun getProductNotFound() {
+    fun getProductNotFound(): Unit = runBlocking {
 
         // given
         val productId = 13
@@ -108,7 +109,7 @@ class ProductServiceApplicationTest {
     }
 
     @Test
-    fun getProductInvalidParameterNegativeValue() {
+    fun getProductInvalidParameterNegativeValue(): Unit = runBlocking {
 
         // given
         val productId = -1
