@@ -1,6 +1,5 @@
 package com.ykatsatos.microservices.core.product
 
-import org.springframework.data.domain.Sort.Direction.ASC
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeAll
@@ -9,9 +8,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest
 import org.springframework.dao.OptimisticLockingFailureException
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Pageable
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 import org.springframework.dao.DuplicateKeyException
@@ -19,8 +15,6 @@ import org.testcontainers.containers.MongoDBContainer
 import com.ykatsatos.microservices.core.product.persistence.ProductEntity
 import com.ykatsatos.microservices.core.product.persistence.ProductRepository
 import kotlinx.coroutines.runBlocking
-import java.util.stream.Collectors
-
 
 @DataMongoTest
 class PersistenceTests {

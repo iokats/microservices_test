@@ -5,7 +5,6 @@ import org.mapstruct.Mapping
 import org.mapstruct.Mappings
 import com.ykatsatos.api.core.recommendation.Recommendation
 import com.ykatsatos.microservices.core.recommendation.persistence.RecommendationEntity
-import kotlinx.coroutines.flow.Flow
 
 @Mapper(componentModel = "spring")
 interface RecommendationMapper {

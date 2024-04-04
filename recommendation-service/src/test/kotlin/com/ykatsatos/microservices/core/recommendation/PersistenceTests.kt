@@ -1,8 +1,6 @@
 package com.ykatsatos.microservices.core.recommendation
 
-import org.springframework.dao.DuplicateKeyException;
-import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers.hasSize
+import org.springframework.dao.DuplicateKeyException
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeAll
