@@ -125,6 +125,8 @@ No-blocking, back pressure
 * https://www.baeldung.com/r2dbc[R2DBC- Reactive Relational Database Connectivity]
 * https://github.com/asyncer-io/r2dbc-mysql[R2DBC for MySQL]
 * https://www.bezkoder.com/spring-r2dbc-mysql/[Spring Boot R2DBC MySQL Example]
+* https://xebia.com/blog/spring-data-r2dbc-and-kotlin-coroutines/[Spring Data R2DBC and Kotlin Coroutines]
+* https://www.baeldung.com/kotlin/spring-boot-kotlin-coroutines[Non-Blocking Spring Boot with Kotlin Coroutines]
 * https://spring.io/blog/2019/04/12/going-reactive-with-spring-coroutines-and-kotlin-flow[Going Reactive with Spring, Coroutines and Kotlin Flow]
 * https://spring.io/guides/tutorials/spring-webflux-kotlin-rsocket[Spring Boot with Kotlin Coroutines and RSocket]
 * https://docs.spring.io/spring-data/mongodb/reference/kotlin/coroutines.html
