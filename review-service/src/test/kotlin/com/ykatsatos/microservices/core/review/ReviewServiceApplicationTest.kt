@@ -12,6 +12,8 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import reactor.core.publisher.Mono
 import com.ykatsatos.api.core.review.Review
 import com.ykatsatos.microservices.core.review.persistence.ReviewRepository
+import kotlinx.coroutines.flow.count
+import kotlinx.coroutines.runBlocking
 
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
@@ -24,24 +26,24 @@ class ReviewServiceApplicationTest {
     private lateinit var repository: ReviewRepository
 
     @BeforeEach
-    fun setUp() {
+    fun setUp() = runBlocking {
 
         repository.deleteAll()
     }
 
     @Test
-    fun getReviewsByProductId() {
+    fun getReviewsByProductId(): Unit = runBlocking {
 
         // given
         val productId = 1
 
-        assertEquals(0, repository.findByProductId(productId).size)
+        assertEquals(0, repository.findByProductId(productId).count())
 
         postAndVerifyReview(productId, 1, OK)
         postAndVerifyReview(productId, 2, OK)
         postAndVerifyReview(productId, 3, OK)
 
-        assertEquals(3, repository.findByProductId(productId).size)
+        assertEquals(3, repository.findByProductId(productId).count())
 
         // when
         val response = getAndVerifyReviewsByProductId(productId, OK)
@@ -56,7 +58,7 @@ class ReviewServiceApplicationTest {
     }
 
     @Test
-    fun duplicateError() {
+    fun duplicateError(): Unit = runBlocking {
 
         // given
         val productId = 2
@@ -80,25 +82,25 @@ class ReviewServiceApplicationTest {
     }
 
     @Test
-    fun deleteReviews() {
+    fun deleteReviews(): Unit = runBlocking {
 
         // given
         val productId = 1
         val reviewId = 1
 
         postAndVerifyReview(productId, reviewId, OK)
-        assertEquals(1, repository.findByProductId(productId).size)
+        assertEquals(1, repository.findByProductId(productId).count())
 
         // when
         deleteAndVerifyReviewsByProductId(productId, OK)
 
         // then
-        assertEquals(0, repository.findByProductId(productId).size)
+        assertEquals(0, repository.findByProductId(productId).count())
         deleteAndVerifyReviewsByProductId(productId, OK)
     }
 
     @Test
-    fun getReviewsMissingParameter() {
+    fun getReviewsMissingParameter(): Unit = runBlocking {
 
         // given
         val productIdQuery = ""
@@ -113,7 +115,7 @@ class ReviewServiceApplicationTest {
     }
 
     @Test
-    fun getReviewsInvalidParameter() {
+    fun getReviewsInvalidParameter(): Unit = runBlocking {
 
         // given
         val productIdQuery = "?productId=no-integer"
@@ -128,7 +130,7 @@ class ReviewServiceApplicationTest {
     }
 
     @Test
-    fun getReviewsNotFound() {
+    fun getReviewsNotFound(): Unit = runBlocking {
 
         // given
         val productIdNotFound = "?productId=213"
@@ -141,7 +143,7 @@ class ReviewServiceApplicationTest {
     }
 
     @Test
-    fun getReviewsInvalidParameterNegativeValue() {
+    fun getReviewsInvalidParameterNegativeValue(): Unit = runBlocking {
 
         // given
         val productIdInvalid = -1

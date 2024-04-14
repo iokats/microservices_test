@@ -185,7 +185,7 @@ class ProductCompositeIntegration @Autowired constructor(
         }
     }
 
-    override fun deleteReviews(productId: Int) {
+    override suspend fun deleteReviews(productId: Int) {
 
         try {
 

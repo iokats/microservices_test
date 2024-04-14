@@ -1,13 +1,11 @@
 package com.ykatsatos.microservices.core.review.persistence
 
-import jakarta.persistence.*
+import org.springframework.data.annotation.Id
+import org.springframework.data.annotation.Version
+import org.springframework.data.relational.core.mapping.Table
 
-@Entity
 @NoArg
-@Table(
-    name = "reviews",
-    indexes = [Index(name = "reviews_unique_idx", unique = true, columnList = "productId,reviewId")]
-)
+@Table(name = "reviews")
 class ReviewEntity(
     var productId: Int,
     var reviewId: Int,
@@ -16,7 +14,7 @@ class ReviewEntity(
     var content: String
 ) {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
     var id: Int? = null
         private set
 

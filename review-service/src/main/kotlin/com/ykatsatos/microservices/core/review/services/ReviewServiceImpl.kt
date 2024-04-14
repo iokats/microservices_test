@@ -11,6 +11,8 @@ import com.ykatsatos.api.exceptions.InvalidInputException
 import com.ykatsatos.microservices.core.review.persistence.ReviewEntity
 import com.ykatsatos.microservices.core.review.persistence.ReviewRepository
 import com.ykatsatos.microservices.utilities.http.ServiceUtil
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 private val LOG: Logger = LoggerFactory.getLogger(ReviewServiceImpl::class.java)
 
@@ -21,7 +23,7 @@ class ReviewServiceImpl @Autowired constructor(
     private val serviceUtil: ServiceUtil
 ): ReviewService {
 
-    override fun createReview(body: Review): Review {
+    override suspend fun createReview(body: Review): Review {
 
         try {
 
@@ -39,41 +41,35 @@ class ReviewServiceImpl @Autowired constructor(
         }
     }
 
-    override fun getReviews(productId: Int): List<Review> {
+    override fun getReviews(productId: Int): Flow<Review> {
 
         if (productId < 1) {
             throw InvalidInputException("Invalid productId: $productId")
         }
 
-        val reviewEntityList = repository.findByProductId(productId)
+        LOG.debug("getReviews")
 
-        val reviewApiList = entityListToApiList(reviewEntityList)
-
-        LOG.debug("getReviews: response size: ${reviewApiList.size}")
-
-        return reviewApiList
+        return repository.findByProductId(productId).map(this::entityToApi)
     }
 
-    override fun deleteReviews(productId: Int) {
+    override suspend fun deleteReviews(productId: Int) {
 
         LOG.debug("deleteReviews: tries to delete reviews for the product with productId: $productId")
 
         repository.deleteAll(repository.findByProductId(productId))
     }
 
-    private fun entityListToApiList(reviewEntityList: List<ReviewEntity>): List<Review> {
+    private fun entityToApi(reviewEntity: ReviewEntity): Review {
 
-        val reviewApiList = mapper.entityListToApiList(reviewEntityList)
+        val reviewApi = mapper.entityToApi(reviewEntity)
 
-        return reviewApiList.map {
-            Review(
-                it.productId,
-                it.reviewId,
-                it.author,
-                it.subject,
-                it.content,
-                serviceUtil.serviceAddress
-            )
-        }
+        return Review(
+            reviewApi.productId,
+            reviewApi.reviewId,
+            reviewApi.author,
+            reviewApi.subject,
+            reviewApi.content,
+            serviceUtil.serviceAddress
+        )
     }
 }

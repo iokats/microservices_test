@@ -1,5 +1,6 @@
 package com.ykatsatos.api.core.review
 
+import kotlinx.coroutines.flow.Flow
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -19,7 +20,7 @@ interface ReviewService {
      * @return A JSON representation of the newly created review
      */
     @PostMapping(value = ["/review"], consumes = ["application/json"], produces = ["application/json"])
-    fun createReview(@RequestBody body: Review): Review
+    suspend fun createReview(@RequestBody body: Review): Review
 
     /**
      * Sample usage: "curl $HOST:$PORT/review?productId=1".
@@ -28,7 +29,7 @@ interface ReviewService {
      * @return the reviews of the product
      */
     @GetMapping(value = ["/review"], produces = ["application/json"])
-    fun getReviews(@RequestParam(value = "productId", required = true) productId: Int): List<Review>
+    fun getReviews(@RequestParam(value = "productId", required = true) productId: Int): Flow<Review>
 
     /**
      * Sample usage: "curl -X DELETE $HOST:$PORT/review?productId=1".
@@ -36,5 +37,5 @@ interface ReviewService {
      * @param productId ID of the product
      */
     @DeleteMapping(value = ["/review"])
-    fun deleteReviews(@RequestParam(value = "productId", required = true) productId: Int)
+    suspend fun deleteReviews(@RequestParam(value = "productId", required = true) productId: Int)
 }

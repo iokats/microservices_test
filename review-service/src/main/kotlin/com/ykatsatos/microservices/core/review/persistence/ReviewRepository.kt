@@ -1,11 +1,11 @@
 package com.ykatsatos.microservices.core.review.persistence
 
-import org.springframework.data.repository.CrudRepository
-import org.springframework.transaction.annotation.Transactional
-import com.ykatsatos.microservices.core.review.persistence.ReviewEntity
+import kotlinx.coroutines.flow.Flow
+import org.springframework.data.repository.kotlin.CoroutineCrudRepository
+import org.springframework.stereotype.Repository
 
-interface ReviewRepository: CrudRepository<ReviewEntity, Int> {
+@Repository
+interface ReviewRepository: CoroutineCrudRepository<ReviewEntity, Int> {
 
-    @Transactional(readOnly = true)
-    fun findByProductId(productId: Int?): List<ReviewEntity>
+    fun findByProductId(productId: Int?): Flow<ReviewEntity>
 }

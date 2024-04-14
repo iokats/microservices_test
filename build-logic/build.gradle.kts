@@ -24,6 +24,7 @@ dependencies {
     implementation(libs.spring.data.mongodb)
     implementation(libs.spring.data.jpa)
     implementation(libs.mysql.connector.j)
+    implementation(libs.r2dbc.mysql)
     implementation(libs.dependency.management.plugin)
     implementation(libs.mapstruct)
     implementation(libs.mapstruct.spring.extension)
@@ -33,4 +34,5 @@ dependencies {
     testImplementation(libs.testcontainers.junit.jupiter)
     testImplementation(libs.testcontainers.mongodb)
     testImplementation(libs.testcontainers.mysql)
+    testImplementation(libs.testcontainers.r2dbc)
 }
