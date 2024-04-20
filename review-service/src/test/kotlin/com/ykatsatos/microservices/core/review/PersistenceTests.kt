@@ -12,8 +12,6 @@ import org.springframework.test.context.DynamicPropertySource
 import org.testcontainers.containers.MySQLContainer
 import com.ykatsatos.microservices.core.review.persistence.ReviewEntity
 import com.ykatsatos.microservices.core.review.persistence.ReviewRepository
-import kotlinx.coroutines.flow.count
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.springframework.boot.test.autoconfigure.data.r2dbc.DataR2dbcTest
 import org.springframework.dao.DataIntegrityViolationException

@@ -11,8 +11,6 @@ import com.ykatsatos.api.exceptions.InvalidInputException
 import com.ykatsatos.microservices.core.recommendation.persistence.RecommendationEntity
 import com.ykatsatos.microservices.core.recommendation.persistence.RecommendationRepository
 import com.ykatsatos.microservices.utilities.http.ServiceUtil
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 
 private val LOG: Logger = LoggerFactory.getLogger(RecommendationServiceImpl::class.java)
 
@@ -43,7 +41,7 @@ class RecommendationServiceImpl @Autowired constructor(
         }
     }
 
-    override fun getRecommendations(productId: Int): Flow<Recommendation> {
+    override suspend fun getRecommendations(productId: Int): List<Recommendation> {
 
         if (productId < 1) {
             throw InvalidInputException("Invalid productId: $productId")

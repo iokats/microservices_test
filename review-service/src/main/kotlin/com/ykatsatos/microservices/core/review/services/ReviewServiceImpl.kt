@@ -11,8 +11,6 @@ import com.ykatsatos.api.exceptions.InvalidInputException
 import com.ykatsatos.microservices.core.review.persistence.ReviewEntity
 import com.ykatsatos.microservices.core.review.persistence.ReviewRepository
 import com.ykatsatos.microservices.utilities.http.ServiceUtil
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 
 private val LOG: Logger = LoggerFactory.getLogger(ReviewServiceImpl::class.java)
 
@@ -41,7 +39,7 @@ class ReviewServiceImpl @Autowired constructor(
         }
     }
 
-    override fun getReviews(productId: Int): Flow<Review> {
+    override suspend fun getReviews(productId: Int): List<Review> {
 
         if (productId < 1) {
             throw InvalidInputException("Invalid productId: $productId")

@@ -4,8 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.core.ParameterizedTypeReference
-import org.springframework.http.HttpMethod.GET
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
 import org.springframework.web.client.HttpClientErrorException
@@ -19,6 +17,9 @@ import com.ykatsatos.api.core.review.ReviewService
 import com.ykatsatos.api.exceptions.InvalidInputException
 import com.ykatsatos.api.exceptions.NotFoundException
 import com.ykatsatos.microservices.utilities.http.HttpErrorInfo
+import org.springframework.http.MediaType
+import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.reactive.function.client.awaitBody
 import java.io.IOException
 
 
@@ -26,6 +27,7 @@ private val LOG = LoggerFactory.getLogger(ProductCompositeIntegration::class.jav
 
 @Component
 class ProductCompositeIntegration @Autowired constructor(
+    private val webClient: WebClient,
     private val restTemplate: RestTemplate,
     private val mapper: ObjectMapper,
     @param:Value("\${app.product-service.host}") private val productServiceHost: String,
@@ -40,7 +42,7 @@ class ProductCompositeIntegration @Autowired constructor(
     private val recommendationServiceUrl = "http://$recommendationServiceHost:$recommendationServicePort/recommendation"
     private val reviewServiceUrl = "http://$reviewServiceHost:$reviewServicePort/review"
 
-    override fun createProduct(body: Product): Product {
+    override suspend fun createProduct(body: Product): Product {
 
         try {
             val url = productServiceUrl
@@ -57,26 +59,19 @@ class ProductCompositeIntegration @Autowired constructor(
         }
     }
 
-    override fun getProduct(productId: Int): Product {
+    override suspend fun getProduct(productId: Int): Product {
 
-        try {
+        val url = "$productServiceUrl/$productId"
+        LOG.debug("Will call getProduct API on URL: {}", url)
 
-            val url = "$productServiceUrl/$productId"
-
-            LOG.debug("Will call getProduct API on URL: {}", url)
-
-            val product = restTemplate.getForObject(url, Product::class.java)!!
-            LOG.debug("Found a product with id: {}", product.productId)
-
-            return product
-
-        } catch (ex: HttpClientErrorException) {
-
-            throw handleHttpClientException(ex)
-        }
+        return webClient.get()
+            .uri(url)
+            .accept(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .awaitBody<Product>()
     }
 
-    override fun deleteProduct(productId: Int) {
+    override suspend fun deleteProduct(productId: Int) {
 
         try {
 
@@ -91,7 +86,7 @@ class ProductCompositeIntegration @Autowired constructor(
         }
     }
 
-    override fun createRecommendation(body: Recommendation): Recommendation {
+    override suspend fun createRecommendation(body: Recommendation): Recommendation {
 
         try {
             val url = recommendationServiceUrl
@@ -108,30 +103,26 @@ class ProductCompositeIntegration @Autowired constructor(
         }
     }
 
-    override fun getRecommendations(productId: Int): List<Recommendation> {
+    override suspend fun getRecommendations(productId: Int): List<Recommendation> {
 
         try {
 
             val url = "$recommendationServiceUrl?productId=$productId"
             LOG.debug("Will call getRecommendations API on URL: {}", url)
 
-            val recommendations: List<Recommendation> = restTemplate
-                .exchange(
-                    url,
-                    GET,
-                    null,
-                    object : ParameterizedTypeReference<List<Recommendation>>() {}).body!!
+            return webClient.get()
+                .uri(url)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .awaitBody()
 
-            LOG.debug("Found {} recommendations for a product with id: {}", recommendations.size, productId)
-
-            return recommendations
         } catch (ex: Exception) {
             LOG.warn("Got an exception while requesting recommendations, return zero recommendations: {}", ex.message)
             return listOf()
         }
     }
 
-    override fun deleteRecommendations(productId: Int) {
+    override suspend fun deleteRecommendations(productId: Int) {
 
         try {
 
@@ -146,7 +137,7 @@ class ProductCompositeIntegration @Autowired constructor(
         }
     }
 
-    override fun createReview(body: Review): Review {
+    override suspend fun createReview(body: Review): Review {
 
         try {
             val url = reviewServiceUrl
@@ -163,22 +154,19 @@ class ProductCompositeIntegration @Autowired constructor(
         }
     }
 
-    override fun getReviews(productId: Int): List<Review> {
+    override suspend fun getReviews(productId: Int): List<Review> {
 
         try {
 
             val url = "$reviewServiceUrl?productId=$productId"
             LOG.debug("Will call getReviews API on URL: {}", url)
 
-            val reviews: List<Review> = restTemplate
-                .exchange(
-                    url,
-                    GET,
-                    null,
-                    object : ParameterizedTypeReference<List<Review>>() {}).body!!
+            return webClient.get()
+                .uri(url)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .awaitBody()
 
-            LOG.debug("Found {} reviews for a product with id: {}", reviews.size, productId)
-            return reviews
         } catch (ex: Exception) {
             LOG.warn("Got an exception while requesting reviews, return zero reviews: {}", ex.message)
             return listOf()

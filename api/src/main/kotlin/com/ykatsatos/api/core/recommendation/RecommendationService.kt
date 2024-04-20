@@ -1,6 +1,5 @@
 package com.ykatsatos.api.core.recommendation
 
-import kotlinx.coroutines.flow.Flow
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -29,7 +28,7 @@ interface RecommendationService {
      * @return the recommendations of the product
      */
     @GetMapping(value = ["/recommendation"], produces = ["application/json"])
-    fun getRecommendations(@RequestParam(value = "productId", required = true) productId: Int): Flow<Recommendation>
+    suspend fun getRecommendations(@RequestParam(value = "productId", required = true) productId: Int): List<Recommendation>
 
     /**
      * Sample usage: "curl -X DELETE $HOST:$PORT/recommendation?productId=1".

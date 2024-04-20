@@ -16,13 +16,13 @@ import reactor.core.publisher.Mono.just
 import com.ykatsatos.api.composite.product.ProductAggregate
 import com.ykatsatos.api.composite.product.RecommendationSummary
 import com.ykatsatos.api.composite.product.ReviewSummary
-import com.ykatsatos.api.composite.product.ServiceAddresses
 import com.ykatsatos.api.core.product.Product
 import com.ykatsatos.api.core.recommendation.Recommendation
 import com.ykatsatos.api.core.review.Review
 import com.ykatsatos.api.exceptions.InvalidInputException
 import com.ykatsatos.api.exceptions.NotFoundException
 import com.ykatsatos.microservices.composite.product.services.ProductCompositeIntegration
+import kotlinx.coroutines.runBlocking
 
 
 private const val PRODUCT_ID_OK = 1
@@ -39,7 +39,8 @@ class ProductCompositeServiceApplicationTest {
     private lateinit var compositeIntegration: ProductCompositeIntegration
 
     @BeforeEach
-    fun setUp() {
+    fun setUp(): Unit = runBlocking {
+
         `when`(compositeIntegration.getProduct(PRODUCT_ID_OK))
             .thenReturn(Product(PRODUCT_ID_OK, "name", 1, "mock-address"))
         `when`(compositeIntegration.getRecommendations(PRODUCT_ID_OK))

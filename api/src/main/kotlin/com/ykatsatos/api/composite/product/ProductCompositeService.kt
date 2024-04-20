@@ -31,7 +31,7 @@ interface ProductCompositeService {
         ApiResponse(responseCode = "422", description = "\${api.responseCodes.unprocessableEntity.description}")
     ])
     @PostMapping(value = ["/product-composite"], produces = ["application/json"])
-    fun createProduct(@RequestBody body: ProductAggregate)
+    suspend fun createProduct(@RequestBody body: ProductAggregate)
 
     /**
      * Sample usage: "curl $HOST:$PORT/product-composite/1".
@@ -50,7 +50,7 @@ interface ProductCompositeService {
         ApiResponse(responseCode = "422", description = "\${api.responseCodes.unprocessableEntity.description}")
     ])
     @GetMapping(value = ["/product-composite/{productId}"], produces = ["application/json"])
-    fun getProduct(@PathVariable productId: Int): ProductAggregate
+    suspend fun getProduct(@PathVariable productId: Int): ProductAggregate
 
     /**
      * Sample usage: "curl -X DELETE $HOST:$PORT/product-composite/1".
@@ -66,5 +66,5 @@ interface ProductCompositeService {
         ApiResponse(responseCode = "422", description = "\${api.responseCodes.unprocessableEntity.description}")
     ])
     @DeleteMapping(value = ["/product-composite/{productId}"])
-    fun deleteProduct(@PathVariable productId: Int)
+    suspend fun deleteProduct(@PathVariable productId: Int)
 }

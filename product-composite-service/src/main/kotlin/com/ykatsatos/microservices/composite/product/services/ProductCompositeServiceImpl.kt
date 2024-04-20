@@ -8,6 +8,8 @@ import com.ykatsatos.api.core.product.Product
 import com.ykatsatos.api.core.recommendation.Recommendation
 import com.ykatsatos.api.core.review.Review
 import com.ykatsatos.microservices.utilities.http.ServiceUtil
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 
 private val LOG = LoggerFactory.getLogger(ProductCompositeServiceImpl::class.java)
 
@@ -17,7 +19,7 @@ class ProductCompositeServiceImpl @Autowired constructor(
     private val integration: ProductCompositeIntegration
 ): ProductCompositeService {
 
-    override fun createProduct(body: ProductAggregate) {
+    override suspend fun createProduct(body: ProductAggregate) {
 
         try {
             LOG.debug("createCompositeProduct: creates a new composite entity for productId: ${body.productId}")
@@ -52,18 +54,18 @@ class ProductCompositeServiceImpl @Autowired constructor(
         }
     }
 
-    override fun getProduct(productId: Int): ProductAggregate {
+    override suspend fun getProduct(productId: Int): ProductAggregate = coroutineScope {
 
-        val product = integration.getProduct(productId)
+        val product = async { integration.getProduct(productId) }
 
-        val recommendations = integration.getRecommendations(productId)
+        val recommendations = async { integration.getRecommendations(productId) }
 
-        val reviews = integration.getReviews(productId)
+        val reviews = async { integration.getReviews(productId) }
 
-        return createProductAggregate(product, recommendations, reviews, serviceUtil.serviceAddress)
+        createProductAggregate(product.await(), recommendations.await(), reviews.await(), serviceUtil.serviceAddress)
     }
 
-    override fun deleteProduct(productId: Int) {
+    override suspend fun deleteProduct(productId: Int) = coroutineScope {
 
         LOG.debug("deleteCompositeProduct: Deletes a product aggregate for productId: $productId")
 
