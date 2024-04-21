@@ -108,19 +108,69 @@ by providing fast, reproducible, and portable test environments.
 * https://github.com/testcontainers/testcontainers-java/tree/main/examples/spring-boot-kotlin-redis[Examples in GitHub]
 
 == Reactive Microservice
+According to 'The Reactive Manifesto' a reactive system must be Responsive, Resilient, Elastic and Message Driven.
+
 Reactive Programming is a programming paradigm that allows developers to build applications that react to changes in data
 streams and handle asynchronous events efficiently. It emphasizes declarative and event-driven programming models, making
 it easier to manage complex asynchronous operations.
 
-Main Point for analysis => no-blocking back pressure.
-hot, cold streams
 In summary, "asynchronous streams of data with non-blocking back pressure" describes a programming model where data
 flows asynchronously between components, with operations performed non-blockingly, and back pressure applied to control
 the flow of data and prevent overwhelm in downstream components. This model is commonly used in reactive programming
 frameworks and systems to build scalable, responsive, and resilient applications.
 
-No-blocking, back pressure
+=== Back-Pressure
+When one component is struggling to keep-up, the system as a whole needs to respond in a sensible way. It is unacceptable
+for the component under stress to fail catastrophically or to drop messages in an uncontrolled fashion. Since it can’t
+cope and it can’t fail it should communicate the fact that it is under stress to upstream components and so get them to
+reduce the load. This back-pressure is an important feedback mechanism that allows systems to gracefully respond to load
+rather than collapse under it. The back-pressure may bubble all the way up to the user, at which point responsiveness may
+degrade, but this mechanism will ensure that the system is resilient under load, and will provide information that may
+allow the system itself to apply other resources to help distribute the load, see Elasticity.
 
+=== No-Blocking
+
+In reactive programming, non-blocking (or non-blocking I/O) refers to a programming paradigm where operations do not block
+the execution thread while waiting for a result. Instead, they allow the thread to continue with other tasks or to be
+returned to a thread pool for further use.
+
+In a non-blocking system, when a piece of code initiates an I/O operation (such as reading from a file, querying a
+database, or making an HTTP request), it doesn't wait for the operation to complete before moving on to the next task.
+Instead, it registers a callback or a promise (depending on the programming model) and allows the thread to continue with
+other work.
+
+When the I/O operation completes, the system invokes the callback or fulfills the promise, and the associated code is
+executed. This way, the thread doesn't sit idle, waiting for the I/O operation to finish, which can lead to more efficient
+use of system resources and better scalability.
+
+=== Streams
+Reactive Systems rely on asynchronous message-passing to establish a boundary between components that ensures loose
+coupling, isolation and location transparency. This boundary also provides the means to delegate failures as messages.
+Employing explicit message-passing enables load management, elasticity, and flow control by shaping and monitoring the
+message queues in the system and applying back-pressure when necessary. Location transparent messaging as a means of
+communication makes it possible for the management of failure to work with the same constructs and semantics across a
+cluster or within a single host. Non-blocking communication allows recipients to only consume resources while active,
+leading to less system overhead.
+
+==== Up Stream
+In reactive systems, an "upstream" refers to the source of data or events in a reactive data flow. It represents the
+initial producer or publisher of data, which emits data items or events that are then processed by downstream components.
+
+==== Down Stream
+In reactive systems, a "downstream" component refers to a consumer or subscriber of data or events in a reactive data
+flow. It represents the components that consume or react to the data emitted by upstream components.
+
+==== Hot Stream
+In reactive systems, a "hot stream" component refers to a source of data or events that emits items regardless of whether
+there are any subscribers. Hot streams are continuously producing data, and subscribers can join the stream at any time
+to receive the emitted items. Unlike cold streams, hot streams do not start producing data upon subscription.
+
+==== Cold Stream
+In reactive systems, a "cold stream" component refers to a source of data or events that emits items only when there is
+a subscriber. Cold streams are like traditional iterators or generators; they produce items on-demand and start emitting
+data when a subscriber subscribes to them
+
+=== References
 * https://reactivemanifesto.org/pdf/the-reactive-manifesto-2.0.pdf[Reactive Manifesto]
 * https://spring.io/reactive[Reactive]
 * https://codersee.com/reactive-programming-in-kotlin-a-step-by-step-guide/[Reactive Programming in Kotlin: A Step-by-Step Guide]
@@ -136,3 +186,4 @@ No-blocking, back pressure
 * https://docs.spring.io/spring-data/mongodb/reference/kotlin/coroutines.html[Coroutines]
 * https://dzone.com/articles/testcontainers-with-kotlin-and-spring-data-r2dbc[Testcontainers With Kotlin and Spring Data R2DBC]
 * https://piotrminkowski.com/2023/07/28/reactive-spring-boot-with-webflux-r2dbc-and-postgres/[Reactive Spring Boot with WebFlux, R2DBC and Postgres]
+* https://learn.microsoft.com/en-ca/archive/blogs/ddperf/parallel-scalability-isnt-childs-play-part-2-amdahls-law-vs-gunthers-law[Parallel Scalability Isn’t Child’s Play, Part 2: Amdahl’s Law vs. Gunther’s Law]
