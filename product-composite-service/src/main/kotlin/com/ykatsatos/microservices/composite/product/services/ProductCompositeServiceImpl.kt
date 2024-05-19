@@ -27,7 +27,7 @@ class ProductCompositeServiceImpl @Autowired constructor(
             val product = Product(body.productId, body.name, body.weight)
             integration.createProduct(product)
 
-            body.recommendations.forEach { recommendationSummary ->
+            body.recommendations?.forEach { recommendationSummary ->
                 val recommendation = Recommendation(
                     body.productId,
                     recommendationSummary.recommendationId,
@@ -38,7 +38,7 @@ class ProductCompositeServiceImpl @Autowired constructor(
                 integration.createRecommendation(recommendation)
             }
 
-            body.reviews.forEach { reviewSummary ->
+            body.reviews?.forEach { reviewSummary ->
                 val review = Review(
                     body.productId,
                     reviewSummary.reviewId,

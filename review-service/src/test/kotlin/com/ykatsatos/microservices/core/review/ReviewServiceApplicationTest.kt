@@ -9,11 +9,15 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.*
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.web.reactive.server.WebTestClient
-import reactor.core.publisher.Mono
 import com.ykatsatos.api.core.review.Review
+import com.ykatsatos.api.event.Event
+import com.ykatsatos.api.event.EventType
+import com.ykatsatos.api.exceptions.InvalidInputException
 import com.ykatsatos.microservices.core.review.persistence.ReviewRepository
-import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.api.Assertions
+import org.springframework.beans.factory.annotation.Qualifier
+import java.util.function.Consumer
 
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
@@ -24,6 +28,10 @@ class ReviewServiceApplicationTest {
 
     @Autowired
     private lateinit var repository: ReviewRepository
+
+    @Autowired
+    @Qualifier("messageProcessor")
+    private lateinit var messageProcessor: Consumer<Event<Int, Review>>
 
     @BeforeEach
     fun setUp() = runBlocking {
@@ -39,9 +47,9 @@ class ReviewServiceApplicationTest {
 
         assertEquals(0, repository.findByProductId(productId).count())
 
-        postAndVerifyReview(productId, 1, OK)
-        postAndVerifyReview(productId, 2, OK)
-        postAndVerifyReview(productId, 3, OK)
+        sendCreateReviewEvent(productId, 1)
+        sendCreateReviewEvent(productId, 2)
+        sendCreateReviewEvent(productId, 3)
 
         assertEquals(3, repository.findByProductId(productId).count())
 
@@ -66,19 +74,16 @@ class ReviewServiceApplicationTest {
 
         assertEquals(0, repository.count())
 
-        postAndVerifyReview(productId, reviewId, OK)
-            .jsonPath("$.productId").isEqualTo(productId)
-            .jsonPath("$.reviewId").isEqualTo(reviewId)
+        sendCreateReviewEvent(productId, reviewId)
 
         assertEquals(1, repository.count())
 
-        // when
-        val response = postAndVerifyReview(productId, reviewId, UNPROCESSABLE_ENTITY)
+        // when - then
+        val exception = Assertions.assertThrows(InvalidInputException::class.java, {
+            sendCreateReviewEvent(productId, reviewId)
+        }, "Expected a InvalidInputException here!")
 
-        // then
-        response
-            .jsonPath("$.path").isEqualTo("/review")
-            .jsonPath("$.message").isEqualTo("Duplicate key, productId: $productId, reviewId: $reviewId")
+        assertEquals("Duplicate key, productId: $productId, reviewId: $reviewId", exception.message)
     }
 
     @Test
@@ -88,15 +93,15 @@ class ReviewServiceApplicationTest {
         val productId = 1
         val reviewId = 1
 
-        postAndVerifyReview(productId, reviewId, OK)
+        val review = sendCreateReviewEvent(productId, reviewId)
         assertEquals(1, repository.findByProductId(productId).count())
 
         // when
-        deleteAndVerifyReviewsByProductId(productId, OK)
+        sendDeleteReviewEvent(review)
 
         // then
         assertEquals(0, repository.findByProductId(productId).count())
-        deleteAndVerifyReviewsByProductId(productId, OK)
+        sendDeleteReviewEvent(review)
     }
 
     @Test
@@ -173,41 +178,22 @@ class ReviewServiceApplicationTest {
             .expectBody()
     }
 
-    private fun postAndVerifyReview(
-        productId: Int,
-        reviewId: Int,
-        expectedStatus: HttpStatus
-    ): WebTestClient.BodyContentSpec {
-
-        val newReview = Review(
+    private fun sendCreateReviewEvent(productId: Int, reviewId: Int): Review {
+        val review = Review(
             productId,
             reviewId,
             "Author $reviewId",
             "Subject $reviewId",
             "Content $reviewId",
-            "SA"
-        )
+            "SA")
 
-        return client.post()
-            .uri("/review").
-            body(Mono.just(newReview), Review::class.java)
-            .accept(APPLICATION_JSON)
-            .exchange()
-            .expectStatus().isEqualTo(expectedStatus)
-            .expectHeader().contentType(APPLICATION_JSON)
-            .expectBody()
+        val event = Event(EventType.CREATE, productId, review)
+        messageProcessor.accept(event)
+        return review
     }
 
-    private fun deleteAndVerifyReviewsByProductId(
-        productId: Int,
-        expectedStatus: HttpStatus
-    ): WebTestClient.BodyContentSpec {
-
-        return client.delete()
-            .uri("/review?productId=$productId")
-            .accept(APPLICATION_JSON)
-            .exchange()
-            .expectStatus().isEqualTo(expectedStatus)
-            .expectBody()
+    private fun sendDeleteReviewEvent(review: Review) {
+        val event: Event<Int, Review> = Event(EventType.DELETE, review.productId, review)
+        messageProcessor.accept(event)
     }
 }

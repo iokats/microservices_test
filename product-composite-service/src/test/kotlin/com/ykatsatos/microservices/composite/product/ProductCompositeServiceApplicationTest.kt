@@ -12,10 +12,6 @@ import org.springframework.http.HttpStatus.*
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.WebTestClient.BodyContentSpec
-import reactor.core.publisher.Mono.just
-import com.ykatsatos.api.composite.product.ProductAggregate
-import com.ykatsatos.api.composite.product.RecommendationSummary
-import com.ykatsatos.api.composite.product.ReviewSummary
 import com.ykatsatos.api.core.product.Product
 import com.ykatsatos.api.core.recommendation.Recommendation
 import com.ykatsatos.api.core.review.Review
@@ -23,7 +19,6 @@ import com.ykatsatos.api.exceptions.InvalidInputException
 import com.ykatsatos.api.exceptions.NotFoundException
 import com.ykatsatos.microservices.composite.product.services.ProductCompositeIntegration
 import kotlinx.coroutines.runBlocking
-
 
 private const val PRODUCT_ID_OK = 1
 private const val PRODUCT_ID_NOT_FOUND = 2
@@ -60,45 +55,6 @@ class ProductCompositeServiceApplicationTest {
     }
 
     @Test
-    fun createCompositeProduct1() {
-
-        val compositeProduct = ProductAggregate(1, "name", 123, listOf(), listOf())
-
-        postAndVerifyProduct(compositeProduct, OK)
-    }
-
-    @Test
-    fun createCompositeProduct2() {
-
-        val recommendations = listOf(RecommendationSummary(1, "a", 1, "c"))
-        val reviews = listOf(ReviewSummary(1, "a", "s", "c"))
-        val compositeProduct = ProductAggregate(
-            1,
-            "name",
-            123,
-            recommendations,
-            reviews)
-
-        postAndVerifyProduct(compositeProduct, OK)
-    }
-
-    @Test
-    fun deleteCompositeProduct() {
-        val recommendations = listOf(RecommendationSummary(1, "a", 1, "c"))
-        val reviews = listOf(ReviewSummary(1, "a", "s", "c"))
-        val compositeProduct = ProductAggregate(1,
-            "name",
-            1,
-            recommendations,
-            reviews)
-
-        postAndVerifyProduct(compositeProduct, OK)
-
-        deleteAndVerifyProduct(compositeProduct.productId, OK)
-        deleteAndVerifyProduct(compositeProduct.productId, OK)
-    }
-
-    @Test
     fun getProductById() {
 
         getAndVerifyProduct(PRODUCT_ID_OK, OK)
@@ -132,22 +88,5 @@ class ProductCompositeServiceApplicationTest {
             .expectStatus().isEqualTo(expectedStatus)
             .expectHeader().contentType(APPLICATION_JSON)
             .expectBody()
-    }
-
-    private fun postAndVerifyProduct(compositeProduct: ProductAggregate, expectedStatus: HttpStatus) {
-
-        client.post()
-            .uri("/product-composite")
-            .body(just(compositeProduct), ProductAggregate::class.java)
-            .exchange()
-            .expectStatus().isEqualTo(expectedStatus)
-    }
-
-    private fun deleteAndVerifyProduct(productId: Int, expectedStatus: HttpStatus) {
-
-        client.delete()
-            .uri("/product-composite/$productId")
-            .exchange()
-            .expectStatus().isEqualTo(expectedStatus)
     }
 }

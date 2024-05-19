@@ -1,6 +1,6 @@
 package com.ykatsatos.microservices.core.recommendation
 
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -10,11 +10,14 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.*
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.web.reactive.server.WebTestClient
-import reactor.core.publisher.Mono
 import com.ykatsatos.api.core.recommendation.Recommendation
+import com.ykatsatos.api.event.Event
+import com.ykatsatos.api.event.EventType
+import com.ykatsatos.api.exceptions.InvalidInputException
 import com.ykatsatos.microservices.core.recommendation.persistence.RecommendationRepository
-import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.runBlocking
+import org.springframework.beans.factory.annotation.Qualifier
+import java.util.function.Consumer
 
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
@@ -25,6 +28,10 @@ class RecommendationServiceApplicationTest {
 
     @Autowired
     private lateinit var repository: RecommendationRepository
+
+    @Autowired
+    @Qualifier("messageProcessor")
+    private lateinit var messageProcessor: Consumer<Event<Int, Recommendation>>
 
     @BeforeEach
     fun setUp() = runBlocking {
@@ -38,9 +45,9 @@ class RecommendationServiceApplicationTest {
         // given
         val productId = 1
 
-        postAndVerifyRecommendation(productId, 1, OK)
-        postAndVerifyRecommendation(productId, 2, OK)
-        postAndVerifyRecommendation(productId, 3, OK)
+        sendCreateRecommendationEvent(productId, 1)
+        sendCreateRecommendationEvent(productId, 2)
+        sendCreateRecommendationEvent(productId, 3)
 
         // when
         val response = getAndVerifyRecommendationsByProductId(productId, OK)
@@ -58,20 +65,19 @@ class RecommendationServiceApplicationTest {
     fun duplicateError(): Unit = runBlocking {
 
         // given
-        val productId = 1
+        val productId = 2
         val recommendationId = 1
 
-        // when
-        postAndVerifyRecommendation(productId, recommendationId, OK)
-            .jsonPath("$.productId").isEqualTo(productId)
-            .jsonPath("$.recommendationId").isEqualTo(recommendationId)
+        sendCreateRecommendationEvent(productId, recommendationId)
 
         assertEquals(1, repository.count())
 
-        // then
-        postAndVerifyRecommendation(productId, recommendationId, UNPROCESSABLE_ENTITY)
-            .jsonPath("$.path").isEqualTo("/recommendation")
-            .jsonPath("$.message").isEqualTo("Duplicate key, productId: $productId, recommendationId: $recommendationId")
+        // when - then
+        val exception = assertThrows(InvalidInputException::class.java, {
+            sendCreateRecommendationEvent(productId, recommendationId)
+        }, "Expected a InvalidInputException here!")
+
+        assertEquals("Duplicate key, productId: $productId, recommendationId: $recommendationId", exception.message)
     }
 
     @Test
@@ -81,15 +87,15 @@ class RecommendationServiceApplicationTest {
         val productId = 1
         val recommendationId = 1
 
-        postAndVerifyRecommendation(productId, recommendationId, OK)
+        val recommendation = sendCreateRecommendationEvent(productId, recommendationId)
         assertEquals(1, repository.findByProductId(productId).count())
 
         // when
-        deleteAndVerifyRecommendationsByProductId(productId, OK)
+        sendDeleteRecommendationEvent(recommendation)
 
         // then
         assertEquals(0, repository.findByProductId(productId).count())
-        deleteAndVerifyRecommendationsByProductId(productId, OK)
+        sendDeleteRecommendationEvent(recommendation)
     }
 
     @Test
@@ -166,41 +172,22 @@ class RecommendationServiceApplicationTest {
             .expectBody()
     }
 
-    private fun postAndVerifyRecommendation(
-        productId: Int,
-        recommendationId: Int,
-        expectedStatus: HttpStatus
-    ): WebTestClient.BodyContentSpec {
-
-        val newRecommendation = Recommendation(
+    private fun sendCreateRecommendationEvent(productId: Int, recommendationId: Int): Recommendation {
+        val recommendation = Recommendation(
             productId,
             recommendationId,
             "Author $recommendationId",
             recommendationId,
             "Content $recommendationId",
-            "SA"
-        )
+            "SA")
 
-        return client.post()
-            .uri("/recommendation").
-            body(Mono.just(newRecommendation), Recommendation::class.java)
-            .accept(APPLICATION_JSON)
-            .exchange()
-            .expectStatus().isEqualTo(expectedStatus)
-            .expectHeader().contentType(APPLICATION_JSON)
-            .expectBody()
+        val event = Event(EventType.CREATE, productId, recommendation)
+        messageProcessor.accept(event)
+        return recommendation
     }
 
-    private fun deleteAndVerifyRecommendationsByProductId(
-        productId: Int,
-        expectedStatus: HttpStatus
-    ): WebTestClient.BodyContentSpec {
-
-        return client.delete()
-            .uri("/recommendation?productId=$productId")
-            .accept(APPLICATION_JSON)
-            .exchange()
-            .expectStatus().isEqualTo(expectedStatus)
-            .expectBody()
+    private fun sendDeleteRecommendationEvent(recommendation: Recommendation) {
+        val event: Event<Int, Recommendation> = Event(EventType.DELETE, recommendation.productId, recommendation)
+        messageProcessor.accept(event)
     }
 }

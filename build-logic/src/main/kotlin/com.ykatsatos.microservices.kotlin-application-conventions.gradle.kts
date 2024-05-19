@@ -15,12 +15,24 @@ plugins {
     application
 }
 
+dependencyManagement {
+
+    imports {
+
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:2023.0.1")
+    }
+}
+
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
+    implementation("org.springframework.cloud:spring-cloud-starter-stream-rabbit:4.1.1")
+    implementation("org.springframework.cloud:spring-cloud-starter-stream-kafka:4.1.1")
+
+    testImplementation("org.springframework.cloud:spring-cloud-stream-test-binder:4.1.1")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")
 }

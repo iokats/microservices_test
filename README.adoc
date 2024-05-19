@@ -53,6 +53,7 @@ essential for building reliable and scalable container-based systems
 * https://sujanrajtuladhar.com.np/unlock-the-full-potential-of-docker-run-docker-compose-without-sudo[Unlock the Full Potential of Docker: Run Docker-Compose without Sudo]
 * https://www.hostinger.com/tutorials/docker-cheat-sheet?ppc_campaign=google_search_generic_hosting_all&bidkw=defaultkeyword&lo=20215&gad_source=1&gclid=EAIaIQobChMIw4a4gIPbhAMVjZZoCR2HvQYzEAAYAiAAEgI_z_D_BwE#Clean_Up_Commands[Docker Cheat Sheet: All the Most Essential Commands in One Place]
 * https://quickref.me/docker.html[Docker cheatsheet]
+* https://contabo.com/blog/how-to-remove-docker-volumes-images-and-containers/[How To Remove Docker Volumes, Images and Containers]
 
 == Persistence
 https://github.com/spring-guides/tut-spring-boot-kotlin?tab=readme-ov-file#persistence-with-jpa[The Spring official guide]
@@ -187,3 +188,50 @@ data when a subscriber subscribes to them
 * https://dzone.com/articles/testcontainers-with-kotlin-and-spring-data-r2dbc[Testcontainers With Kotlin and Spring Data R2DBC]
 * https://piotrminkowski.com/2023/07/28/reactive-spring-boot-with-webflux-r2dbc-and-postgres/[Reactive Spring Boot with WebFlux, R2DBC and Postgres]
 * https://learn.microsoft.com/en-ca/archive/blogs/ddperf/parallel-scalability-isnt-childs-play-part-2-amdahls-law-vs-gunthers-law[Parallel Scalability Isn’t Child’s Play, Part 2: Amdahl’s Law vs. Gunther’s Law]
+
+== Event-Driven Asynchronous Microservices
+
+Even though sending asynchronous messages is preferred over synchronous API calls, it comes with challeges of its own.
+We can use Spring Cloud Stream to handle some of them:
+
+1. Consumers groups
+2. Retries and dead-letter queues
+3. Guaranteed orders and partitions
+
+=== Kafka commands
+Unfortunately, Kafka doesn't come with any graphical tools that can be used to inspect topic, partitions, and the messages
+that are placed within them. Instead, we can run CLI commands in the Kafka Docker container.
+
+We can use the following command for connecting to the Kafka container:
+----
+docker exec -it microservices_kafka_1 /bin/bash
+----
+
+If we want to see the list with the topics, we can run the following command:
+----
+cd /
+./usr/bin/kafka-topics --bootstrap-server localhost:9092 --list
+----
+
+To see the partitions in a specific topic, for example, the products topic, run the following command:
+----
+cd /
+./usr/bin/kafka-topics --describe --bootstrap-server localhost:9092 --topic products
+----
+
+To see all the messages in a specific topic, for example, the products topic, run the following command:
+----
+cd /
+./usr/bin/kafka-console-consumer --bootstrap-server localhost:9092 --topic products --from-beginning
+----
+
+To see all the messages in a specific partition, for example, partition 1 in the products topic, run the following command:
+----
+cd /
+./usr/bin/kafka-console-consumer --bootstrap-server localhost:9092 --topic products --from-beginning --partition 1
+----
+
+=== References
+* https://zlaval.medium.com/reactive-spring-cloud-stream-in-practice-9c1e31ce8650[Reactive Spring Cloud Stream in practice]
+* https://spring.io/guides/tutorials/spring-webflux-kotlin-rsocket[Spring Boot with Kotlin Coroutines and RSocket]
+* https://codersee.com/apache-kafka-with-spring-boot-and-kotlin/[Apache Kafka With Spring Boot and Kotlin]
