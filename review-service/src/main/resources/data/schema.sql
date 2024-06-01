@@ -1,4 +1,4 @@
-create table reviews (
+create table if not exists reviews (
     id int NOT NULL AUTO_INCREMENT,
     product_id int,
     review_id int,

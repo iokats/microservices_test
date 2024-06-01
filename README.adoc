@@ -235,3 +235,35 @@ cd /
 * https://zlaval.medium.com/reactive-spring-cloud-stream-in-practice-9c1e31ce8650[Reactive Spring Cloud Stream in practice]
 * https://spring.io/guides/tutorials/spring-webflux-kotlin-rsocket[Spring Boot with Kotlin Coroutines and RSocket]
 * https://codersee.com/apache-kafka-with-spring-boot-and-kotlin/[Apache Kafka With Spring Boot and Kotlin]
+
+== Microservices Patterns
+
+=== Service Discovery (Netflix Eureka)
+Service discovery is probably the most important support function required to make a landscape of cooperating microservices
+production ready. A discovery service can be used to keep track of existing microservices and their instances. The first
+discovery service that Spring Cloud supported was Netflix Eureka.
+
+==== Challenges with Service Discovery
+* New instances can start up at any point in time
+* Existing instances can stop responding and eventually crash at any point in time
+* Some of the failing instances might be okay after a while and should start to receive traffic again, while others will
+not and should be removed from the service registry
+* Some microservice instances might take some time to start up; that is, just because they can receive HTTP requests
+doesn't mean that traffic should be routed to them
+* Unintended network partitioning and other network-related errors can occur at any time
+
+==== The process with the Service Discovery
+1. Whenever a microservice instance starts up - for example, the Review service - it registers itself to one of the Eureka
+servers.
+2. On a regular basis, each microservice instance sends a heartbeat message to the Eureka server, telling it that the
+microservice instance is okay and is ready to receive requests.
+3. Clients - for example, the Product Composite service - use a client library that regularly asks the Eureka service for
+information about available services. Moreover, each client keeps a local cache with the registered services.
+4. When a client needs to send a request to another microservice, it already has a list of available instances in its
+local cache and can pick one of them without asking the discovery server. Typically, available instances are chosen in a
+round-robin fashion; that is, they are called one after another before the first one is called once more.
+
+==== References
+* https://cloud.spring.io/spring-cloud-netflix/reference/html/#service-discovery-eureka-clients[Spring Cloud Netflix]
+* https://medium.com/swlh/scale-up-and-load-balance-a-spring-boot-microservice-with-docker-compose-persist-data-and-enable-c004552dcb31[Spring Cloud Docker and Netflix Eureka Scaled-Up Part1]
+* https://vhutie.medium.com/scale-up-and-load-balance-a-spring-boot-microservice-with-docker-compose-persist-data-and-enable-4656d2e0775c[Spring Cloud Docker and Netflix Eureka Scaled-Up Part2]

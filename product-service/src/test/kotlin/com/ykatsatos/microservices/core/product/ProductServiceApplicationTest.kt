@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Qualifier
 import java.util.function.Consumer
 
 
-@SpringBootTest(webEnvironment = RANDOM_PORT)
+@SpringBootTest(webEnvironment = RANDOM_PORT, properties = ["eureka.client.enabled=false"])
 class ProductServiceApplicationTest {
 
     @Autowired

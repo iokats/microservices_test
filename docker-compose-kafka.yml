@@ -128,3 +128,10 @@ services:
       - "2181:2181"
     environment:
       - ZOOKEEPER_CLIENT_PORT=2181
+
+  eureka:
+    build: eureka-server
+    restart: always
+    mem_limit: 512m
+    ports:
+      - "8761:8761"

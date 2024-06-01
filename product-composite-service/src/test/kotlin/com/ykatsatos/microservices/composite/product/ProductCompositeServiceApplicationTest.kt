@@ -24,7 +24,7 @@ private const val PRODUCT_ID_OK = 1
 private const val PRODUCT_ID_NOT_FOUND = 2
 private const val PRODUCT_ID_INVALID = 3
 
-@SpringBootTest(webEnvironment = RANDOM_PORT)
+@SpringBootTest(webEnvironment = RANDOM_PORT, properties = ["eureka.client.enabled=false"])
 class ProductCompositeServiceApplicationTest {
 
     @Autowired

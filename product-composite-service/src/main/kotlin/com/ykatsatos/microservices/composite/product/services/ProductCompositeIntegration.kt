@@ -15,7 +15,6 @@ import com.ykatsatos.microservices.utilities.http.HttpErrorInfo
 import kotlinx.coroutines.reactive.awaitFirst
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.actuate.health.Health
 import org.springframework.cloud.stream.function.StreamBridge
 import org.springframework.http.HttpStatus
@@ -37,17 +36,11 @@ class ProductCompositeIntegration @Autowired constructor(
     webClientBuilder: WebClient.Builder,
     private val mapper: ObjectMapper,
     private val streamBridge: StreamBridge,
-    @param:Value("\${app.product-service.host}") private val productServiceHost: String,
-    @param:Value("\${app.product-service.port}") private val productServicePort: String,
-    @param:Value("\${app.recommendation-service.host}") private val recommendationServiceHost: String,
-    @param:Value("\${app.recommendation-service.port}") private val recommendationServicePort: String,
-    @param:Value("\${app.review-service.host}") private val reviewServiceHost: String,
-    @param:Value("\${app.review-service.port}") private val reviewServicePort: String,
 ): ProductService, RecommendationService, ReviewService {
 
-    private val productServiceUrl = "http://$productServiceHost:$productServicePort"
-    private val recommendationServiceUrl = "http://$recommendationServiceHost:$recommendationServicePort"
-    private val reviewServiceUrl = "http://$reviewServiceHost:$reviewServicePort"
+    private val productServiceUrl = "http://product"
+    private val recommendationServiceUrl = "http://recommendation"
+    private val reviewServiceUrl = "http://review"
     private val webClient = webClientBuilder.build()
 
     override suspend fun createProduct(body: Product): Product {

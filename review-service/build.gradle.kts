@@ -15,6 +15,7 @@ dependencies {
 
 	implementation(project(":api"))
 	implementation(project(":utilities"))
+	implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
 	implementation(libs.mapstruct)
 	implementation(libs.mapstruct.spring.extension)
 	kapt(libs.mapstruct.processor)

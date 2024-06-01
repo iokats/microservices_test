@@ -9,6 +9,7 @@ dependencies {
 	implementation(project(":api"))
 	implementation(project(":utilities"))
 	implementation(libs.springdoc.openapi.webflux)
+	implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
 }
 
 tasks.named<BootJar>("bootJar") {

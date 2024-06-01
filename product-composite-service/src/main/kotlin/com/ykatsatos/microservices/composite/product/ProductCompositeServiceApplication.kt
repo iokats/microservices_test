@@ -8,9 +8,11 @@ import io.swagger.v3.oas.models.info.License
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.cloud.client.loadbalancer.LoadBalanced
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.web.client.RestTemplate
+import org.springframework.web.reactive.function.client.WebClient
 
 @SpringBootApplication
 @ComponentScan("com.ykatsatos")
@@ -57,7 +59,8 @@ class ProductCompositeServiceApplication {
 		.url(apiLicenseUrl)
 
 	@Bean
-	fun restTemplate(): RestTemplate = RestTemplate()
+	@LoadBalanced
+	fun loadBalancedWebClientBuilder(): WebClient.Builder = WebClient.builder()
 }
 
 fun main(args: Array<String>) {

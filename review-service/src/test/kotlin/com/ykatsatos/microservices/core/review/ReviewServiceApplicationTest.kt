@@ -19,8 +19,10 @@ import org.junit.jupiter.api.Assertions
 import org.springframework.beans.factory.annotation.Qualifier
 import java.util.function.Consumer
 
-
-@SpringBootTest(webEnvironment = RANDOM_PORT)
+@SpringBootTest(webEnvironment = RANDOM_PORT, properties = [
+    "spring.cloud.stream.defaultBinder=rabbit",
+    "logging.level.se.magnus=DEBUG",
+    "eureka.client.enabled=false"])
 class ReviewServiceApplicationTest {
 
     @Autowired

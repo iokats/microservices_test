@@ -8,6 +8,7 @@ dependencies {
 
     implementation(project(":api"))
     implementation(project(":utilities"))
+    implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
     implementation(libs.spring.data.mongodb)
     implementation(libs.mapstruct)
