@@ -267,3 +267,28 @@ round-robin fashion; that is, they are called one after another before the first
 * https://cloud.spring.io/spring-cloud-netflix/reference/html/#service-discovery-eureka-clients[Spring Cloud Netflix]
 * https://medium.com/swlh/scale-up-and-load-balance-a-spring-boot-microservice-with-docker-compose-persist-data-and-enable-c004552dcb31[Spring Cloud Docker and Netflix Eureka Scaled-Up Part1]
 * https://vhutie.medium.com/scale-up-and-load-balance-a-spring-boot-microservice-with-docker-compose-persist-data-and-enable-4656d2e0775c[Spring Cloud Docker and Netflix Eureka Scaled-Up Part2]
+
+=== Edge Server (Spring Cloud Gateway)
+In a system landscape of microservices, it is in many cases desirable to expose some of the microservices to the outside
+of the system landscape and hide the remaining microservices from external access. The exposed microservices must be
+protected against requests from malicious clients.
+
+Initially, Spring Cloud used Netflix Zuul v1 as its edge server. Since Cloud Greenwich release, it's recommended to use
+Spring Cloud Gateway instead. Spring Cloud Gateway comes with similar support for critical features, such as URL path-based
+routing and the protection of endpoints via the use of OAuh 2.0 and OpenID Connect (OIDC).
+
+One important difference
+between Netflix Zuul v1 and Spring Cloud Gateway is that Spring Cloud Gateway is based on non-blocking APIs that use
+Spring 5, Project Reactor, and Spring Boot 2,while Netflix Zuul v1 is based on blocking APIs.
+
+
+==== Requirements For Edge Servers
+1. Hide internal services that should not be exposed outside their context; that only route requests to microservices that
+are configured to allow external requests.
+2. Expose external services and protect them from malicious requests; that is,use standard protocols and best practices
+such as OAuth, OIDC, JWT tokens, and API keys to ensure that the clients are trustworthy.
+
+==== References
+* https://docs.spring.io/spring-cloud-gateway/docs/4.0.10-SNAPSHOT/reference/html/[Spring Cloud Gateway]
+* https://docs.spring.io/spring-cloud-gateway/reference/spring-cloud-gateway/starter.html[How to Include Spring Cloud Gateway]
+* https://spring.io/projects/spring-cloud-gateway#learn[Spring Cloud Gateway Documentation]

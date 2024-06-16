@@ -4,8 +4,13 @@ springdoc:
   packagesToScan: com.ykatsatos.microservices.composite.product
   pathsToMatch: /**
 
-api:
+# When Swagger UI is presented behind an edge server, it must be able to present an OpenAPI specification of the API that
+# contains the correct server URL - the URL of the edge server instead of the URL of the product-composite service itself.
+# To enable the product-composite service to produce a correct server URL in the OpenAPI specification, the following
+# configuration must be added.
+server.forward-headers-strategy: framework
 
+api:
   common:
     version: 1.0.0
     title: Sample API

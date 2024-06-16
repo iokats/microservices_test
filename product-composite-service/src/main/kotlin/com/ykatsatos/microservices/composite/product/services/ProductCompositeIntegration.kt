@@ -15,7 +15,6 @@ import com.ykatsatos.microservices.utilities.http.HttpErrorInfo
 import kotlinx.coroutines.reactive.awaitFirst
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.actuate.health.Health
 import org.springframework.cloud.stream.function.StreamBridge
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -123,18 +122,6 @@ class ProductCompositeIntegration @Autowired constructor(
         sendMessage("reviews-out-0", Event<Int, Product>(EventType.DELETE, productId))
     }
 
-    fun getProductHealth(): Mono<Health> {
-        return getHealth(productServiceUrl)
-    }
-
-    fun getRecommendationHealth(): Mono<Health> {
-        return getHealth(recommendationServiceUrl)
-    }
-
-    fun getReviewHealth(): Mono<Health> {
-        return getHealth(reviewServiceUrl)
-    }
-
     private fun <T> sendMessage(bindingName: String, event: Event<Int, T>) {
         LOG.debug("Sending a {} message to {}", event.eventType, bindingName)
 
@@ -144,20 +131,6 @@ class ProductCompositeIntegration @Autowired constructor(
             .build()
 
         streamBridge.send(bindingName, message)
-    }
-
-    private fun getHealth(url: String): Mono<Health> {
-
-        val healthUrl = "$url/actuator/health"
-        LOG.debug("Will call the Health API on URL: {}", healthUrl)
-
-        return webClient.get()
-            .uri(healthUrl)
-            .retrieve()
-            .bodyToMono(String::class.java)
-            .map { Health.Builder().up().build()  }
-            .onErrorResume { ex -> Mono.just(Health.Builder().down(ex).build()) }
-            .log(LOG.name, Level.FINE)
     }
 
     private fun handleException(ex: WebClientResponseException): Throwable {
